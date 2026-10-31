@@ -2,7 +2,7 @@
 
 Juego de cartas Pumba para Android: partida contra la máquina y marcador de puntos para jugar con baraja de verdad.
 App Capacitor + web (`www/`). No usa servidor: todos los datos se guardan en el móvil.
-Paquete: `com.itcanarias.pumba` · versión 1.0.2
+Paquete: `com.itcanarias.pumba` · versión 1.0.3
 
 © 2026 IT Canarias. Todos los derechos reservados.
 
@@ -56,11 +56,15 @@ Si cambia una regla, hay que tocar `www/juego.js` (motor y máquina) y `openGame
 
 ```bash
 npm install
-npm test                  # pruebas (Playwright + Chromium)
+npm test                  # pruebas (Playwright 1.63 + Chromium)
 npx cap sync android
 npx cap open android      # Android Studio
 npm run icons             # iconos y splash a partir de assets/
 ```
+
+## Google Play
+
+`play-store/` tiene la ficha (`FICHA-GOOGLE-PLAY.md`), el icono de 512, el gráfico destacado y las capturas de móvil y de tablet de 7" y 10". Para regenerarlas: `node play-store/capturas.mjs`.
 
 ## Web
 

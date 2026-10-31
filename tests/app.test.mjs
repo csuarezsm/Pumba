@@ -337,10 +337,18 @@ console.log('Reglas del Pumba');
         while (!compute(g).ended && guard++ < 400) { dealHand(g); const h = g.play.hand; while (h.phase !== 'over') { const pid = h.turn; g.play.level = pid[0] === 'a' ? la : lb; botStep(g); } }
         if (compute(g).ended.winner.startsWith('a')) wa++; }
       return Math.round(wa / N * 1000) / 10; };
-    return { normal: play('normal', 'facil', 400), hard: play('dificil', 'facil', 400) };
+    const duel2 = (N) => { let wa = 0;
+      for (let k = 0; k < N; k++) { const ps = [{ id: 'a' + k, name: 'A' }, { id: 'b' + k, name: 'B' }]; if (k % 2) ps.reverse();
+        const g = { id: uid(), created: 1, cfg: Object.assign({}, DEF_CFG, { rebuyMode: 'none' }), players: ps, firstDealer: ps[0].id, events: [], play: newPlay({ level: 'normal' }, ps.map(x => x.id)) };
+        let guard = 0;
+        while (!compute(g).ended && guard++ < 400) { dealHand(g); const h = g.play.hand; while (h.phase !== 'over') { g.play.level = h.turn[0] === 'a' ? 'dificil' : 'normal'; botStep(g); } }
+        if (compute(g).ended.winner.startsWith('a')) wa++; }
+      return Math.round(wa / N * 1000) / 10; };
+    return { normal: play('normal', 'facil', 400), hard: play('dificil', 'facil', 400), hardVsNormal: duel2(600) };
   });
   check(`la máquina en normal gana más que en fácil (${duel.normal} % frente a 2 rivales; al azar sería 33 %)`, duel.normal > 36, JSON.stringify(duel));
   check(`la máquina en difícil gana más que en fácil (${duel.hard} %)`, duel.hard > 36, JSON.stringify(duel));
+  check(`el nivel difícil gana al normal (${duel.hardVsNormal} % de 600 partidas)`, duel.hardVsNormal > 50, JSON.stringify(duel));
   check('sin errores de JavaScript', !errors.length, errors.join(' | '));
   await ctx.close();
 }
@@ -395,6 +403,9 @@ console.log('Jugar contra la máquina desde la pantalla');
   await p.click('#cNo');
   check('si se cancela, no roba', await p.evaluate(() => S.game.play.hand.hands[me(S.game)].length === 3));
   await p.click('[data-card="c6"]'); await p.click('#pPlay');
+  await p.evaluate(() => { const g = S.game, h = g.play.hand; h.saved = h.hands[me(g)]; h.hands[me(g)] = ['o1', 'o2', 'o3', 'o4', 'o5', 'o6', 'o7', 'o10', 'o11', 'o12', 'c1', 'c3', 'c5', 'c7']; render(); });
+  check('con 14 cartas la mano cabe en dos filas', await p.evaluate(() => { const cs = [...document.querySelectorAll('.pt-hand .pc-card')]; const tops = new Set(cs.map(c => Math.round(c.getBoundingClientRect().top))); return cs.length === 14 && tops.size === 2 && cs[0].getBoundingClientRect().width >= 40 && document.documentElement.scrollWidth <= innerWidth; }));
+  await p.evaluate(() => { const g = S.game, h = g.play.hand; h.hands[me(g)] = h.saved; delete h.saved; render(); });
   check('echar una carta válida la pone en la mesa', await p.evaluate(() => S.game.play.hand.pile.at(-1) === 'c6'));
   await p.click('#menuBtn'); await p.click('#mEnd'); await p.click('#cOk');
   check('nombres de rivales personalizados y sin repetir', await p.evaluate(() => S.archive[0].players.map(x => x.name).join() === 'Carlos,🤖 Chano,🤖 carlos 2'), await p.evaluate(() => S.archive.map(a => a.players.map(x => x.name).join()).join(' | ')));

@@ -263,6 +263,9 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
   .pt-opps{flex-wrap:wrap}
   .pt-opp{flex:1 1 calc(33.33% - 8px)}
 }
+/* Muchas cartas en la mano (castigos acumulados): dos filas en vez de cartas diminutas */
+.pt-hand.many{flex-wrap:wrap;row-gap:10px}
+.pt-hand.many .pc-card,.pt-hand.many.big .pc-card{flex:0 0 calc((100% - 24px) / 7);width:auto;max-width:calc(58px * var(--cs, 1))}
 .pt-claim{width:100%;margin:0 0 8px;padding:12px;font-weight:800;animation:tipPulse 1.2s ease-in-out infinite}
 .pt-say[disabled]{opacity:.35}
 .pt-suits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0}
@@ -339,7 +342,7 @@ function openThemes() {
   $('#thOk').onclick = closeModal;
 }
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores

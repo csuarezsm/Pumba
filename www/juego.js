@@ -281,7 +281,7 @@ function renderTable(g, R) {
     <div class="pt-log">${esc(h.log || '')}</div></div><div class="pt-r">
     ${canClaim ? `<button class="btn-red pt-claim" id="pClaim">📣 ¡${esc(pname(g, h.forgot.pid))} no ha dicho Pumba!</button>` : ''}
     <div class="pt-hint">${hint}</div>
-    ${mine ? `<div class="pt-hand ${cs[0] !== '1' ? 'big' : ''}">${mine.map(id => cardHtml(id, { sel: id === playSel, ok: myTurn && okIds.includes(id), dim: myTurn && !okIds.includes(id), tip: tip && tip.play === id, isNew: id === h.fresh, data: `data-card="${id}"` })).join('')}</div>
+    ${mine ? `<div class="pt-hand ${cs[0] !== '1' ? 'big' : ''} ${mine.length > 8 ? 'many' : ''}">${mine.map(id => cardHtml(id, { sel: id === playSel, ok: myTurn && okIds.includes(id), dim: myTurn && !okIds.includes(id), tip: tip && tip.play === id, isNew: id === h.fresh, data: `data-card="${id}"` })).join('')}</div>
     <div class="pt-info">Llevas <b>${R.st[my].total}</b> · en la mano <b>${handPoints(h.hands[my])}</b> pts · ${h.deck.length} en el mazo<br><button class="pt-learn" id="pLearn">💡 Aprendizaje: ${learn ? 'sí' : 'no'}</button> <button class="pt-learn" id="pSize">🔍 Cartas: ${cs[1]}</button></div>
     <div class="pt-acts">
       <button class="btn-ghost" id="pScore">📋 Puntos</button>

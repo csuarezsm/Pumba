@@ -1,0 +1,25 @@
+{
+  "name": "pumba-marcador",
+  "version": "1.0.0",
+  "private": true,
+  "author": "IT Canarias",
+  "license": "UNLICENSED",
+  "description": "Pumba: marcador de puntos y juego contra la máquina (IT Canarias)",
+  "scripts": {
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "test": "node tests/app.test.mjs",
+    "icons": "npx @capacitor/assets generate --android --iconBackgroundColor '#16304f' --splashBackgroundColor '#10233d'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.1.9",
+    "@capacitor/share": "^7.0.4"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0",
+    "playwright": "^1.63.0"
+  }
+}

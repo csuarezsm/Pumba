@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pumba · Descargas</title>
+<link rel="icon" href="icon.png">
+<style>
+  :root{--bg:#10233d;--card:#1d3d63;--card2:#264d78;--line:#335f8f;--txt:#f2f5fa;--mut:#a5b6cc;--gold:#ff9f1c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,Roboto,sans-serif;padding:20px;max-width:720px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 4px}
+  .mut{color:var(--mut);font-size:14px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+  .kpi{background:var(--card);border-radius:14px;padding:14px;text-align:center}
+  .kpi b{display:block;font-size:32px;color:var(--gold)}
+  .kpi span{font-size:13px;color:var(--mut)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;font-variant-numeric:tabular-nums}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
+  th{background:var(--card2);font-size:13px;color:var(--mut)}
+  td:first-child,th:first-child{text-align:left}
+  .bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:4px}
+  .bar i{display:block;height:100%;background:var(--gold)}
+  button{font:inherit;background:var(--gold);color:#2a1500;border:0;border-radius:10px;padding:10px 16px;font-weight:700;margin-top:14px}
+  .note{background:var(--card);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:14px;color:var(--mut)}
+</style>
+</head>
+<body>
+  <h1>🃏 Pumba · Descargas</h1>
+  <div class="mut" id="upd">Cargando…</div>
+  <div class="kpis">
+    <div class="kpi"><b id="kTotal">–</b><span>descargas totales</span></div>
+    <div class="kpi"><b id="kLast">–</b><span>de la última versión</span></div>
+    <div class="kpi"><b id="kVer">–</b><span>última versión</span></div>
+  </div>
+  <table>
+    <thead><tr><th>Versión</th><th>Publicada</th><th>Descargas</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="3" class="mut">Cargando…</td></tr></tbody>
+  </table>
+  <button onclick="load()">↻ Actualizar</button>
+  <div class="note">
+    Cuenta cada vez que se descarga el APK: incluye nuevas instalaciones, actualizaciones hechas desde la app y tus propias descargas.
+    No es el número exacto de personas.
+  </div>
+<script>
+const REPO = 'csuarezsm/Pumba';
+async function load() {
+  document.getElementById('upd').textContent = 'Cargando…';
+  try {
+    const r = await fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=100', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rel = (await r.json()).filter(x => (x.assets || []).some(a => /\.apk$/i.test(a.name)));
+    const data = rel.map(x => ({ v: x.tag_name, date: new Date(x.published_at), n: x.assets.filter(a => /\.apk$/i.test(a.name)).reduce((s, a) => s + a.download_count, 0) }));
+    const total = data.reduce((s, d) => s + d.n, 0), max = Math.max(1, ...data.map(d => d.n));
+    document.getElementById('kTotal').textContent = total;
+    document.getElementById('kLast').textContent = data[0] ? data[0].n : 0;
+    document.getElementById('kVer').textContent = data[0] ? data[0].v : '–';
+    document.getElementById('rows').innerHTML = data.map(d => `<tr><td><b>${d.v}</b></td><td>${d.date.toLocaleDateString('es-ES')} ${d.date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</td><td>${d.n}<div class="bar"><i style="width:${d.n / max * 100}%"></i></div></td></tr>`).join('') || '<tr><td colspan="3" class="mut">Sin versiones publicadas.</td></tr>';
+    document.getElementById('upd').textContent = 'Actualizado: ' + new Date().toLocaleString('es-ES');
+  } catch (e) {
+    document.getElementById('upd').textContent = 'No se pudo cargar (' + e.message + '). Inténtalo de nuevo en un minuto.';
+  }
+}
+load();
+</script>
+</body>
+</html>

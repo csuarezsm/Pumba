@@ -1,0 +1,9 @@
+{
+  "appId": "com.itcanarias.pumba",
+  "appName": "Pumba",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#10233d",
+    "adjustMarginsForEdgeToEdge": "auto"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pumba</string>
+    <string name="title_activity_main">Pumba</string>
+    <string name="package_name">com.itcanarias.pumba</string>
+    <string name="custom_url_scheme">com.itcanarias.pumba</string>
+</resources>

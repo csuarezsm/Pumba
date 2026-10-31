@@ -1,0 +1,49 @@
+name: APK Android
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', 'README.md', 'LICENSE']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm ci || npm install
+      - name: Pruebas automáticas (si fallan, no se publica)
+        run: npx playwright install --with-deps chromium && npm test
+      - run: npx cap sync android
+      - name: Preparar clave de firma
+        env: { KS: "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" }
+        run: |
+          if [ -n "$KS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/pumba-release.jks"
+            echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/pumba-release.jks" >> "$GITHUB_ENV"
+            echo "Firmando con la clave fija"
+          else
+            echo "::error::Faltan los secretos ANDROID_KEYSTORE_BASE64 / ANDROID_KEYSTORE_PASSWORD"; exit 1
+          fi
+      - name: Compilar APK (GitHub) y AAB (Google Play)
+        working-directory: android
+        env: { ANDROID_KEYSTORE_PASSWORD: "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" }
+        run: chmod +x gradlew && ./gradlew assembleGithubRelease bundlePlayRelease
+      - run: |
+          cp android/app/build/outputs/apk/github/release/app-github-release.apk pumba.apk
+          cp android/app/build/outputs/bundle/playRelease/app-play-release.aab pumba-play.aab
+      - name: Publicar versión
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          V=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
+          grep -q "APP_VERSION = '$V'" www/index.html || { echo "::error::APP_VERSION en www/index.html no coincide con versionName $V"; exit 1; }
+          # Una versión ya publicada no se vuelve a crear: así se conserva su contador de descargas
+          if gh release view "v$V" >/dev/null 2>&1; then echo "La v$V ya está publicada; sube versionName para publicar otra."; exit 0; fi
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create "v$V" pumba.apk pumba-play.aab --latest --title "Pumba v$V" --notes "$(git log -1 --pretty=%s)
+
+          © 2026 IT Canarias. Todos los derechos reservados."

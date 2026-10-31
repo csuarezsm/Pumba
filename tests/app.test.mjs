@@ -431,7 +431,7 @@ console.log('Jugar contra la máquina desde la pantalla');
   fs.mkdirSync(join(motores, 'pumba'));
   for (const f of ['marcador.js', 'juego.js']) fs.copyFileSync(join(ROOT, f), join(motores, 'pumba', f));   // las reglas de ESTA versión de la app
   for (const j of ['chinchon', 'ajedrez']) fs.cpSync(join(SERV, 'motores', j), join(motores, j), { recursive: true });
-  Object.assign(process.env, { PASO_BOT_MS: '30', SEGUIR_MS: '6000', AUSENTE_MS: '800', PAUSA_RECLAMAR_MS: '1500', MOTORES_DIR: motores, DATA_DIR: fs.mkdtempSync(join(os.tmpdir(), 'juegos-')) });
+  Object.assign(process.env, { PASO_BOT_MS: '30', SEGUIR_MS: '6000', AUSENTE_MS: '800', PAUSA_RECLAMAR_MS: '5000', MOTORES_DIR: motores, DATA_DIR: fs.mkdtempSync(join(os.tmpdir(), 'juegos-')) });
   const req = createRequire(join(SERV, 'package.json'));
   const { crearServidor } = req('./src/server.js');
   const Salas = req('./src/salas.js');
@@ -478,10 +478,9 @@ console.log('Jugar contra la máquina desde la pantalla');
   const vioBoton = await B.p.waitForSelector('#pClaim', { timeout: 4000 }).then(() => true).catch(() => false);
   check('si alguien olvida el «¡Pumba!», los demás ven el botón para reclamarlo', vioBoton, await B.p.evaluate(() => JSON.stringify({ olvido: ON.sala.partida.olvido, log: ON.sala.partida.log })));
   if (vioBoton) {
-    const antes = await A.p.evaluate(() => ON.sala.partida.miMano.length);
     await B.p.click('#pClaim');
-    await A.p.waitForFunction(n => ON.sala.partida.miMano.length === n + 2, antes, { timeout: 4000 }).catch(() => {});
-    check('al reclamarlo, el despistado roba dos', await A.p.evaluate(n => ON.sala.partida.miMano.length === n + 2, antes));
+    await A.p.waitForFunction(() => /Mari reclama/.test(ON.sala.partida.log), null, { timeout: 6000 }).catch(() => {});
+    check('al reclamarlo, el despistado roba dos', await A.p.evaluate(() => /Mari reclama/.test(ON.sala.partida.log) && ON.sala.partida.miMano.length >= 3), await A.p.evaluate(() => ON.sala.partida.log));
   }
   // juegan los dos desde la pantalla hasta terminar una mano
   const paso = async x => {

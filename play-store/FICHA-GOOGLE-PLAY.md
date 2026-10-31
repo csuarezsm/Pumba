@@ -41,6 +41,11 @@ Pumba es el juego de cartas de toda la vida con baraja española, ahora en tu m�
 • Eliminados y reenganches con la puntuación más alta de los que siguen.
 • Deshacer y corregir cualquier mano.
 
+🌐 JUEGA EN LÍNEA
+• Crea una partida y comparte el código por WhatsApp: de 2 a 6 jugadores.
+• Las sillas libres las puede ocupar la máquina.
+• Si se corta la conexión, vuelves a tu sitio.
+
 📊 CLASIFICACIÓN
 • Ranking de jugadores, resultado de cada jornada y récords.
 • Ficha de cada jugador con su historial y el cara a cara con los demás.
@@ -51,10 +56,10 @@ Pumba es el juego de cartas de toda la vida con baraja española, ahora en tu m�
 • Temas de colores y tamaño de letra y de cartas.
 • Funciona en vertical, en horizontal y en tablet.
 • La pantalla no se apaga durante la partida.
-• Funciona sin conexión.
+• Funciona sin conexión (salvo el juego en línea).
 
-🔒 SIN ANUNCIOS Y SIN RECOGER DATOS
-No hay cuentas ni registro, no lleva anuncios ni rastreadores y tus partidas se guardan solo en tu móvil.
+🔒 SIN ANUNCIOS NI CUENTAS
+No hay cuentas ni registro, no lleva anuncios ni rastreadores y tus partidas se guardan en tu móvil. En línea solo se usa tu apodo durante la partida.
 
 Desarrollada en Lanzarote por IT Canarias.
 
@@ -77,9 +82,9 @@ Desarrollada en Lanzarote por IT Canarias.
 | Política de privacidad | La URL de arriba (hay que activar GitHub Pages) |
 | Acceso a la aplicación | Todas las funciones están disponibles sin restricciones |
 | Anuncios | No contiene anuncios |
-| Clasificación de contenido | Categoría «Juego». Violencia, sexo, lenguaje, drogas: No. Juegos de apuestas simulados: No (es un juego de cartas sin apuestas; el «bote» del marcador solo anota importes, no hay dinero ni compras). Interacción entre usuarios o compartir ubicación: No |
+| Clasificación de contenido | Categoría «Juego». Violencia, sexo, lenguaje, drogas: No. Juegos de apuestas simulados: No (es un juego de cartas sin apuestas; el «bote» del marcador solo anota importes, no hay dinero ni compras). Interacción entre usuarios: **Sí** (partidas en línea con código, sin chat). Compartir ubicación: No |
 | Público objetivo | 18 años o más (evita los requisitos de la política de Familias) |
-| Seguridad de los datos | ¿Recoge o comparte datos? **No**. Los datos se cifran en tránsito: no aplica. Los usuarios pueden borrar los datos desde la app (⋮ → Borrar datos) |
+| Seguridad de los datos | ¿Recoge datos? **Sí**: Información personal → **Nombre** (el apodo del juego en línea). Recogido, no compartido, procesado de forma efímera, opcional, para «Funcionalidad de la aplicación». Cifrados en tránsito: Sí. Se pueden borrar: la partida se borra sola del servidor; los datos del móvil, desde ⋮ → Borrar datos |
 | Aplicación gubernamental | No |
 | Funciones financieras | Ninguna |
 | Salud | Ninguna |

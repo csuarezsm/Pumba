@@ -2,12 +2,13 @@
 
 Juego de cartas Pumba para Android: partida contra la máquina y marcador de puntos para jugar con baraja de verdad.
 App Capacitor + web (`www/`). No usa servidor: todos los datos se guardan en el móvil.
-Paquete: `com.itcanarias.pumba` · versión 1.0.3
+Paquete: `com.itcanarias.pumba` · versión 1.1.0
 
 © 2026 IT Canarias. Todos los derechos reservados.
 
 ## Qué hace
 
+- **Jugar en línea**: salas con código para 2 a 6 jugadores en el servidor común de IT Canarias (`wss://juegos.itcanarias.com/ws`, repo `csuarezsm/juegos-servidor`), con la máquina en las sillas libres. El servidor reparte y comprueba cada jugada con el mismo motor que la app; «¡Pumba!» se puede reclamar fuera de turno. El cliente está en `www/online.js`.
 - **Jugar contra la máquina**: de 1 a 5 rivales (de 2 a 6 jugadores) y tres niveles (fácil, normal y difícil). Tiene modo aprendizaje y botón «¡Pumba!», y puedes reclamar a un rival que no lo ha dicho.
 - **Llevar los puntos**: anotas cada mano. Quien se queda sin cartas no suma y los demás suman lo que tienen en la mano. Se lleva quién da y quién sale.
 - **Eliminación y reenganche**: queda eliminado quien pasa de 100 (con 100 justos sigue). El reenganche es opcional: el eliminado vuelve con la puntuación más alta de los que siguen. El límite de reenganches se configura (1 por defecto).
@@ -34,7 +35,7 @@ Se basan en «Pumba – Normas» v0.1 y en las decisiones que cerramos después:
 | Puntos | Cada carta vale su número; sota 10, caballo 11 y rey 12. *Opción*: todas las figuras valen 10 |
 | Mazo agotado | Se barajan las cartas de la mesa menos la última |
 
-Si cambia una regla, hay que tocar `www/juego.js` (motor y máquina) y `openGameRules()` en `www/index.html` (texto de ayuda). Las pruebas de `tests/app.test.mjs` comprueban cada regla.
+Si cambia una regla, hay que tocar `www/juego.js` (motor y máquina) y `openGameRules()` en `www/index.html` (texto de ayuda). **Para el juego en línea**, copia `www/marcador.js` y `www/juego.js` a `motores/pumba/` de `csuarezsm/juegos-servidor` y reinstala el servidor en el VPS (`cd /opt/juegos-servidor && git pull && bash despliegue/instalar-vps.sh`). Las pruebas de la app juegan en línea contra una copia local de ese servidor con las reglas de la app. Las pruebas de `tests/app.test.mjs` comprueban cada regla.
 
 ## Publicar una versión
 

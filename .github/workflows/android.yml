@@ -16,6 +16,11 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
       - run: npm ci || npm install
+      - name: Servidor de juegos para las pruebas en línea (copia local, no toca el real)
+        run: |
+          git clone --depth 1 https://github.com/csuarezsm/juegos-servidor "$RUNNER_TEMP/juegos-servidor"
+          (cd "$RUNNER_TEMP/juegos-servidor" && npm ci)
+          echo "JUEGOS_SERVIDOR=$RUNNER_TEMP/juegos-servidor" >> "$GITHUB_ENV"
       - name: Pruebas automáticas (si fallan, no se publica)
         run: npx playwright install --with-deps chromium && npm test
       - run: npx cap sync android

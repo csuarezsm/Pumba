@@ -247,6 +247,18 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 .pt-learn{background:none;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--mut);margin-left:4px}
 .pc-m{position:absolute;left:6px;right:6px;bottom:2px;height:4px;border-radius:2px;background:var(--mc)}
 .empty{text-align:center;color:var(--mut);padding:20px}
+/* Jugar en línea */
+.on-code{font-size:calc(46px * var(--fs, 1));font-weight:800;letter-spacing:10px;color:var(--gold);margin:4px 0 12px;font-variant-numeric:tabular-nums}
+.on-seat{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.on-seat:first-of-type{border-top:0}
+.on-seat .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.on-seat .n small{color:var(--mut);font-weight:400}
+.on-seat button{padding:4px 12px}
+.on-dot{width:10px;height:10px;border-radius:50%;background:var(--red);flex:none}
+.on-dot.ok{background:var(--ok)}
+.on-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:calc(12px * var(--fs, 1));color:var(--mut);margin:-4px 0 8px}
+.on-acts{display:flex;gap:10px;margin-top:12px;align-items:center}
+.on-acts button{flex:1;padding:14px}
 /* Mesa del Pumba */
 .pc-card.ok{border-color:var(--ok)}
 .pc-card.dim{filter:brightness(.72) saturate(.7)}
@@ -287,7 +299,9 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <div id="toast"></div>
 <div id="undoBar"></div>
 
+<script src="marcador.js"></script>
 <script src="juego.js"></script>
+<script src="online.js"></script>
 <script>
 'use strict';
 /* ================= Estado y persistencia ================= */
@@ -342,19 +356,10 @@ function openThemes() {
   $('#thOk').onclick = closeModal;
 }
 
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.1.0';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
-const DEF_CFG = {
-  limit: 100,          // eliminado al pasar de este total
-  rebuyMode: 'max',    // 'max' = vuelve con los puntos del que más tiene de los que siguen | 'fixed' | 'none'
-  rebuyFixed: 0,
-  maxRebuys: 1,        // reenganches por jugador (0 = sin límite)
-  stake: 0,            // importe de entrada (€) – opcional
-  rebuyStake: 0        // importe por reenganche (€)
-};
-const uid = () => Math.random().toString(36).slice(2, 10);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = s => document.querySelector(s);
 
@@ -382,64 +387,6 @@ if (!Array.isArray(S.roster)) {
   if (S.game) S.game.players.forEach(p => addSeed(p.name));
 }
 
-/* ================= Motor de la partida ================= */
-function compute(g) {
-  const c = g.cfg, P = g.players, order = P.map(p => p.id);
-  const st = {};
-  P.forEach(p => st[p.id] = { total: 0, out: false, rebuys: 0, outHand: null });
-  let lastDealer = null, hand = 0, ended = null;
-  const rows = [];
-  g.events.forEach((e, idx) => {
-    if (e.t === 'hand') {
-      hand++;
-      const applied = {};
-      for (const id in e.scores) {
-        if (st[id] && !st[id].out) { st[id].total += e.scores[id]; applied[id] = e.scores[id]; }
-      }
-      lastDealer = e.dealer;
-      const newlyOut = [];
-      P.forEach(p => { const s = st[p.id]; if (!s.out && s.total > c.limit) { s.out = true; s.outHand = hand; newlyOut.push(p.id); } });
-      rows.push({ type: 'hand', idx, n: hand, e, applied, totals: Object.fromEntries(P.map(p => [p.id, { t: st[p.id].total, out: st[p.id].out }])), newlyOut });
-    } else if (e.t === 'rebuy') {
-      const s = st[e.p];
-      const valid = s && s.out;
-      if (valid) { s.out = false; s.total = e.score; s.rebuys++; s.outHand = null; }
-      rows.push({ type: 'rebuy', idx, n: hand, e, valid });
-    }
-  });
-  const active = P.filter(p => !st[p.id].out);
-  if (!ended && hand > 0 && active.length <= 1) {
-    const w = active[0] ? active[0].id : P.slice().sort((a, b) => st[a.id].total - st[b.id].total)[0].id;
-    ended = { by: 'last', winner: w };
-  }
-  // Siguiente en dar: el siguiente jugador activo en el orden de la mesa
-  let next = null;
-  if (lastDealer == null) next = st[g.firstDealer] && !st[g.firstDealer].out ? g.firstDealer : (active[0] && active[0].id);
-  else {
-    const i = order.indexOf(lastDealer);
-    for (let k = 1; k <= order.length; k++) { const id = order[(i + k) % order.length]; if (!st[id].out) { next = id; break; } }
-  }
-  // Quién sale (el de la derecha/siguiente del que da)
-  let lead = null;
-  if (next) { const i = order.indexOf(next); for (let k = 1; k < order.length; k++) { const id = order[(i + k) % order.length]; if (!st[id].out) { lead = id; break; } } }
-  const totalRebuys = P.reduce((a, p) => a + st[p.id].rebuys, 0);
-  const pot = (c.stake || 0) * P.length + (c.rebuyStake || 0) * totalRebuys;
-  return { st, active, hand, ended, next, lead, rows, pot, totalRebuys };
-}
-
-function rebuyScore(g, R) {
-  if (g.cfg.rebuyMode === 'fixed') return Number(g.cfg.rebuyFixed) || 0;
-  return R.active.length ? Math.max(...R.active.map(p => R.st[p.id].total)) : 0;
-}
-function canRebuy(g, R, pid) {
-  const s = R.st[pid], c = g.cfg;
-  if (!s.out || c.rebuyMode === 'none') return false;
-  if (!R.active.length) return false;
-  if (c.maxRebuys > 0 && s.rebuys >= c.maxRebuys) return false;
-  return true;
-}
-const pname = (g, id) => (g.players.find(p => p.id === id) || {}).name || '?';
-
 /* ================= Utilidades UI ================= */
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2000); }
@@ -465,7 +412,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 /* ================= Render principal ================= */
 function render() {
   save();
-  if (S.game) renderGame(); else renderSetup();
+  if (S.game) renderGame(); else if (ON.sala) renderOnline(); else renderSetup();
 }
 
 /* ---------- Configuración de partida nueva ---------- */
@@ -498,6 +445,7 @@ function readCfg(prefix) {
 
 function renderSetup() {
   if (S.draft.mode === 'play') return renderPlaySetup();
+  if (S.draft.mode === 'online') return renderOnline();
   $('#subtitle').textContent = 'Nueva partida';
   const d = S.draft;
   const rows = d.names.map((n, i) => `
@@ -816,7 +764,7 @@ async function wipeAll() {
 /* ---------- Pantalla de bienvenida ---------- */
 const WELCOME = [
   ['🃏', 'Bienvenido a Pumba', 'Juega al Pumba contra la máquina o lleva los puntos de vuestras partidas sin papel ni bolígrafo.'],
-  ['🤖', 'Juega contra la máquina', 'Arriba elige «Jugar contra la máquina»: de 1 a 5 rivales y tres niveles. Echa carta del mismo palo o número, y no olvides decir «¡Pumba!» con la penúltima.'],
+  ['🤖', 'Juega contra la máquina o en línea', 'Arriba elige «Contra la máquina» (de 1 a 5 rivales y tres niveles) o «En línea» para jugar con tus amigos con un código. Echa carta del mismo palo o número, y no olvides decir «¡Pumba!» con la penúltima.'],
   ['👥', 'Prepara la mesa', 'Para llevar los puntos, añade a los jugadores en el orden en que estáis sentados y toca el círculo de quien da primero. Los habituales se añaden con un toque.'],
   ['✍️', 'Anota cada mano', 'Pulsa «Anotar mano», marca quién se quedó sin cartas (no suma) y escribe los puntos de los demás. Si te equivocas, «Deshacer» o toca la mano para corregirla.'],
   ['↻', 'Eliminados y reenganches', 'Quien pasa de 100 queda eliminado (con 100 justos sigue). Si quiere, se reengancha con los puntos del que más tiene de los que siguen.'],
@@ -1535,7 +1483,8 @@ $('#menuBtn').onclick = () => {
         <div class="mut" style="margin-top:8px;line-height:1.5">
         • Tus partidas, jugadores y ajustes se guardan <b>solo en este móvil</b>. No hay cuentas ni registro.<br>
         • La app <b>no recoge ningún dato personal</b> ni de uso, y no lleva anuncios ni rastreadores.<br>
-        ${isPlay() ? '• La app <b>no necesita internet</b> para funcionar ni envía ningún dato. Las actualizaciones llegan por Google Play.<br>' : '• Solo se conecta a internet para <b>buscar actualizaciones</b> en GitHub (no envía ningún dato tuyo; como cualquier web, GitHub ve la dirección IP de la conexión) y, si tú lo pulsas, para abrir PayPal o compartir.<br>'}
+        • Si juegas <b>en línea</b>, el nombre que escribes y tus jugadas pasan por el servidor de partidas de IT Canarias (juegos.itcanarias.com) con conexión cifrada. No se guarda nada más y la partida se borra del servidor al poco de terminar.<br>
+        ${isPlay() ? '• Fuera del juego en línea, la app <b>no necesita internet</b> ni envía ningún dato. Las actualizaciones llegan por Google Play.<br>' : '• Además, solo se conecta a internet para <b>buscar actualizaciones</b> en GitHub (no envía ningún dato tuyo; como cualquier web, GitHub ve la dirección IP de la conexión) y, si tú lo pulsas, para abrir PayPal o compartir.<br>'}
         • La copia de seguridad automática se queda en el móvil; Android puede incluirla en tu copia de Google si la tienes activada.<br>
         • Responsable: IT Canarias · itcanarias.com</div></details>
       ${isPlay() ? '' : `<div class="donate">

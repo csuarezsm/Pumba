@@ -419,6 +419,126 @@ console.log('Jugar contra la máquina desde la pantalla');
   await ctx.close();
 }
 
+// Jugar en línea: dos personas en dos móviles + la máquina, contra una copia local del servidor común
+{
+  console.log('Jugar en línea');
+  const { createRequire } = await import('node:module');
+  const os = await import('node:os'); const fs = await import('node:fs');
+  const SERV = process.env.JUEGOS_SERVIDOR || fileURLToPath(new URL('../../juegos-servidor/', import.meta.url));
+  const motores = fs.mkdtempSync(join(os.tmpdir(), 'motores-'));
+  fs.mkdirSync(join(motores, 'pumba'));
+  for (const f of ['marcador.js', 'juego.js']) fs.copyFileSync(join(ROOT, f), join(motores, 'pumba', f));   // las reglas de ESTA versión de la app
+  for (const j of ['chinchon', 'ajedrez']) fs.cpSync(join(SERV, 'motores', j), join(motores, j), { recursive: true });
+  Object.assign(process.env, { PASO_BOT_MS: '30', SEGUIR_MS: '6000', AUSENTE_MS: '800', PAUSA_RECLAMAR_MS: '1500', MOTORES_DIR: motores, DATA_DIR: fs.mkdtempSync(join(os.tmpdir(), 'juegos-')) });
+  const req = createRequire(join(SERV, 'package.json'));
+  const { crearServidor } = req('./src/server.js');
+  const Salas = req('./src/salas.js');
+  const { server: js } = crearServidor();
+  await new Promise(r => js.listen(0, '127.0.0.1', r));
+  const WS = `ws://127.0.0.1:${js.address().port}/ws`;
+  const abrir = async () => {
+    const ctx = await browser.newContext({ viewport: { width: 412, height: 860 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });
+    await ctx.route('https://api.github.com/**', r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ tag_name: 'v0.0.1', assets: [] }) }));
+    await ctx.addInitScript(u => { window.ONLINE_URL = u; window.PLAY_DELAY = 10; if (!localStorage.getItem('pumba.v1')) localStorage.setItem('pumba.v1', JSON.stringify({ onboarded: true })); }, WS);
+    const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message));
+    await p.goto(URL_APP); return { p, ctx, errors };
+  };
+  const A = await abrir(), B = await abrir();
+  await A.p.click('[data-mode="online"]');
+  await A.p.waitForSelector('#onStatus:has-text("Conectado")');
+  check('el modo en línea conecta con el servidor', true);
+  await A.p.click('#onCreate');
+  check('pide el nombre antes de crear', await A.p.evaluate(() => !ON.sala));
+  await A.p.fill('#onName', 'Carlos'); await A.p.click('[data-on="figuras"] [data-v="diez"]'); await A.p.click('#onCreate');
+  await A.p.waitForSelector('#onCodeBig');
+  const codigo = (await A.p.textContent('#onCodeBig')).trim();
+  check('crea la partida y enseña el código', /^[A-Z2-9]{4}$/.test(codigo), codigo);
+  check('las opciones de la partida llegan al servidor', await A.p.evaluate(() => ON.sala.opciones.figuras === 'diez' && ON.sala.max === 6));
+  await B.p.click('[data-mode="online"]'); await B.p.fill('#onName', 'Mari'); await B.p.fill('#onCode', codigo.toLowerCase()); await B.p.click('#onJoin');
+  await B.p.waitForSelector('text=Esperando a que Carlos empiece');
+  check('el segundo móvil entra con el código', true);
+  await A.p.waitForSelector('.on-seat >> nth=1');
+  await A.p.click('#onBot'); await A.p.waitForSelector('.on-seat >> nth=2');
+  check('se añade a la máquina', (await A.p.textContent('.sec:has(.on-seat)')).includes('🤖'));
+  await A.p.click('#onStart');
+  await A.p.waitForSelector('.pt-table'); await B.p.waitForSelector('.pt-table');
+  const manos = await Promise.all([A, B].map(x => x.p.evaluate(() => ON.sala.partida.miMano)));
+  check('cada móvil ve sus 5 cartas y no las del otro', manos[0].length === 5 && manos[1].length === 5 && !manos[0].some(c => manos[1].includes(c)));
+  // «¡Pumba!» olvidado por Carlos: Mari ve el botón y se lo reclama
+  const s = Salas._salas.get(codigo), h = s.estadoJuego.play.hand;
+  clearTimeout(s.timer);
+  const top = h.pile[h.pile.length - 1];
+  h.hands.p1 = [top[0] + (top.slice(1) === '4' ? '5' : '4'), 'b12']; h.turn = 'p1'; h.penalty = 0; h.suit = top[0];
+  Salas.jugada(s.asientos.find(x => x.id === 'p1').token, { tipo: 'listo' });   // sin efecto en juego: solo reenvía la vista a todos
+  await A.p.waitForFunction(() => ON.sala.partida.turno === ON.sala.yo && ON.sala.partida.miMano.length >= 2).catch(() => {});
+  const mia = await A.p.evaluate(() => ON.sala.partida.jugables[0]);
+  if (mia) { await A.p.click(`[data-card="${mia}"]`); if (await A.p.$('[data-suit]')) await A.p.click('[data-suit="o"]'); await A.p.click('#pPlay'); if (await A.p.$('[data-suit]')) await A.p.click('[data-suit="o"]'); }
+  const vioBoton = await B.p.waitForSelector('#pClaim', { timeout: 4000 }).then(() => true).catch(() => false);
+  check('si alguien olvida el «¡Pumba!», los demás ven el botón para reclamarlo', vioBoton, await B.p.evaluate(() => JSON.stringify({ olvido: ON.sala.partida.olvido, log: ON.sala.partida.log })));
+  if (vioBoton) {
+    const antes = await A.p.evaluate(() => ON.sala.partida.miMano.length);
+    await B.p.click('#pClaim');
+    await A.p.waitForFunction(n => ON.sala.partida.miMano.length === n + 2, antes, { timeout: 4000 }).catch(() => {});
+    check('al reclamarlo, el despistado roba dos', await A.p.evaluate(n => ON.sala.partida.miMano.length === n + 2, antes));
+  }
+  // juegan los dos desde la pantalla hasta terminar una mano
+  const paso = async x => {
+    const st = await x.p.evaluate(() => { const s = ON.sala; if (!s || !s.partida) return 'nada'; const p = s.partida; if (p.fase === 'over') return document.querySelector('#prNext') ? 'seguir' : 'nada';
+      if (p.olvido && p.olvido !== s.yo && document.querySelector('#pClaim')) return 'reclamar';
+      return p.turno === s.yo ? (p.jugables.length && !p.castigo ? 'echar' : 'robar') : 'nada'; });
+    const c = { timeout: 500 };
+    if (st === 'robar') await x.p.click('#pDraw', c).catch(() => {});
+    else if (st === 'reclamar') await x.p.click('#pClaim', c).catch(() => {});
+    else if (st === 'echar') {
+      const id = await x.p.evaluate(() => ON.sala.partida.jugables[0]);
+      await x.p.click(`[data-card="${id}"]`, c).catch(() => {});
+      if (await x.p.evaluate(() => ON.sala.partida.miMano.length === 2)) await x.p.click('#pSay', c).catch(() => {});
+      await x.p.click('#pPlay:not([disabled])', c).catch(() => {});
+      if (await x.p.$('[data-suit]')) await x.p.click('[data-suit="c"]', c).catch(() => {});
+    } else if (st === 'seguir') { await x.p.click('#prNext', c).catch(() => {}); return 'seguir'; }
+    return st;
+  };
+  let vista = false, siguientes = 0;
+  for (let i = 0; i < 800 && siguientes < 2; i++) {
+    for (const x of [A, B]) { if (await x.p.$('#prNext') && (await x.p.textContent('.sec')).includes('anotada')) vista = true; const r = await paso(x); if (r === 'seguir') siguientes++; }
+    await A.p.waitForTimeout(20);
+  }
+  check('al terminar la mano se ven las cartas de todos y los puntos', vista);
+  await A.p.waitForFunction(() => ON.sala.partida.fase !== 'over' || ON.sala.estado === 'fin', null, { timeout: 8000 }).catch(() => {});
+  check('se reparte la siguiente mano', await A.p.evaluate(() => ON.sala.estado === 'fin' || (ON.sala.partida.mano >= 2 && ON.sala.partida.fase !== 'over')));
+  // Mari cierra la app y vuelve: recupera la partida
+  const B2 = { p: await B.ctx.newPage(), errors: [] };
+  B2.p.on('pageerror', e => B2.errors.push(e.message));
+  await B.p.close(); await B2.p.goto(URL_APP);
+  await B2.p.waitForSelector('.pt-table, #prNext, #onAgain', { timeout: 8000 }).catch(() => {});
+  check('al volver a abrir la app, vuelve a la partida', await B2.p.evaluate(() => !!(ON.sala && ON.sala.codigo)) && (await B2.p.textContent('#subtitle')).includes(codigo));
+  // Carlos abandona: su silla la ocupa la máquina
+  await A.p.click('#pScore'); await A.p.click('#onLeave3'); await A.p.click('#cOk');
+  await A.p.waitForSelector('#onCreate');
+  check('al abandonar vuelve a la pantalla de inicio en línea', await A.p.evaluate(() => !ON.sala));
+  await B2.p.waitForFunction(() => ON.sala && ON.sala.asientos.find(a => a.id === 'p1').bot, null, { timeout: 5000 }).catch(() => {});
+  check('la máquina ocupa la silla de quien abandona', await B2.p.evaluate(() => !!(ON.sala && ON.sala.asientos.find(a => a.id === 'p1').bot)));
+  // Mari termina la partida contra la máquina y queda en su historial
+  for (let i = 0; i < 2500; i++) {
+    if (await B2.p.evaluate(() => !!(ON.sala && ON.sala.estado === 'fin'))) break;
+    await paso(B2); await B2.p.waitForTimeout(15);
+  }
+  check('la partida en línea termina y queda en el historial', await B2.p.evaluate(() => ON.sala && ON.sala.estado === 'fin' && S.archive.some(a => a.online)));
+  check('en línea, sin errores de JavaScript', !A.errors.length && !B.errors.length && !B2.errors.length, [...A.errors, ...B.errors, ...B2.errors].join(' | '));
+  await A.ctx.close(); await B.ctx.close(); js.close();
+  // servidor que aún no tiene el Pumba: la app avisa de que estará disponible pronto y no deja crear
+  const { WebSocketServer } = req('ws');
+  const viejo = new WebSocketServer({ port: 0 });
+  viejo.on('connection', w => w.send(JSON.stringify({ t: 'hola', version: '2.0.0' })));
+  await new Promise(r => viejo.on('listening', r));
+  const ctxV = await browser.newContext({ viewport: { width: 412, height: 860 }, serviceWorkers: 'block' });
+  await ctxV.addInitScript(u => { window.ONLINE_URL = u; localStorage.setItem('pumba.v1', JSON.stringify({ onboarded: true })); }, `ws://127.0.0.1:${viejo.address().port}`);
+  const pv = await ctxV.newPage(); await pv.goto(URL_APP); await pv.click('[data-mode="online"]');
+  await pv.waitForSelector('#onStatus:has-text("muy pronto")', { timeout: 5000 }).catch(() => {});
+  check('con un servidor sin Pumba avisa y no deja crear', /muy pronto/.test(await pv.textContent('#onStatus')) && await pv.$eval('#onCreate', b => b.disabled));
+  await ctxV.close(); viejo.close();
+}
+
 console.log('Horizontal, tablet y barras de Android');
 {
   for (const [w, h, name] of [[860, 400, 'móvil en horizontal'], [800, 1280, 'tablet'], [1280, 800, 'tablet en horizontal']]) {

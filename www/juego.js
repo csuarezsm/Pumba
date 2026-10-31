@@ -453,6 +453,7 @@ function modeToggleHtml() {
   const m = S.draft.mode || 'score';
   return `<div class="kinds" style="margin:0 0 12px">
     <button data-mode="score" class="${m === 'score' ? 'on' : ''}">📝 Llevar los puntos</button>
-    <button data-mode="play" class="${m === 'play' ? 'on' : ''}">🃏 Jugar contra la máquina</button></div>`;
+    <button data-mode="play" class="${m === 'play' ? 'on' : ''}">🃏 Contra la máquina</button>
+    ${typeof onDisponible === 'function' && onDisponible() ? `<button data-mode="online" class="${m === 'online' ? 'on' : ''}">🌐 En línea</button>` : ''}</div>`;
 }
 function bindModeToggle() { document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { S.draft.mode = b.dataset.mode; save(); render(); }); }

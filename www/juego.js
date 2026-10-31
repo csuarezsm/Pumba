@@ -18,7 +18,6 @@ const HAND_SIZE = 5;                                          // cartas por juga
 const SPECIAL = [2, 3, 10, 11];                               // el rey, de momento, es una carta normal
 const MAX_BOTS = 5;                                           // de 2 a 6 jugadores en total
 const CARD_SIZES = [['1', 'normales'], ['1.25', 'grandes'], ['1.5', 'muy grandes']];
-const BOTS = ['Paco', 'Lola', 'Manolo'];
 const BOT_IDEAS = ['Pancho', 'Chano', 'Candelaria', 'Tomasa', 'Juanillo', 'Nieves', 'Pepito', 'Carmela', 'Domingo', 'Fefa', 'Agustín', 'Chona', 'Ramón', 'Pino', 'Chicho', 'Luci'];
 // Cuánto se equivoca o se despista la máquina según el nivel
 const LEVEL = {
@@ -433,7 +432,7 @@ function renderPlaySetup() {
     const meP = { id: uid(), name: (S.roster || []).find(x => nkey(x) === nkey(myName)) || cleanName(myName) || 'Tú' };
     const taken = new Set([nkey(meP.name)]);
     const bots = Array.from({ length: d.play.bots }, (_, i) => {
-      let n = cleanName(d.play.botNames[i]).replace(/^🤖\s*/, '') || BOTS[i] || 'Rival ' + (i + 1);
+      let n = cleanName(d.play.botNames[i]).replace(/^🤖\s*/, '') || 'Rival ' + (i + 1);
       let k = 2; const base = n; while (taken.has(nkey(n))) n = base + ' ' + k++;
       taken.add(nkey(n)); return { id: uid(), name: '🤖 ' + n };
     });

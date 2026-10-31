@@ -377,6 +377,7 @@ console.log('Jugar contra la máquina desde la pantalla');
   await p.click('#newGame');
   // reclamar un «¡Pumba!» olvidado por la máquina
   await p.click('[data-mode="play"]'); await p.fill('#plName', 'Carlos'); await p.click('[data-bots="1"]'); await p.click('#plStart');
+  check('un rival sin nombre se llama «Rival 1»', await p.evaluate(() => S.game.players[1].name === '🤖 Rival 1'), await p.evaluate(() => S.game.players.map(x => x.name).join()));
   await p.evaluate(() => { window.PLAY_DELAY = 100000; const g = S.game, h = g.play.hand, my = me(g), bot = g.play.bots[0];
     h.hands[bot] = h.hands[bot].slice(0, 1); h.forgot = { pid: bot }; h.turn = my; render(); });
   check('aparece el botón para reclamar el «¡Pumba!» olvidado', !!(await p.$('#pClaim')));

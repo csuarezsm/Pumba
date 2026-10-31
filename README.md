@@ -2,7 +2,7 @@
 
 Juego de cartas Pumba para Android: partida contra la máquina y marcador de puntos para jugar con baraja de verdad.
 App Capacitor + web (`www/`). No usa servidor: todos los datos se guardan en el móvil.
-Paquete: `com.itcanarias.pumba` · versión 1.0.1
+Paquete: `com.itcanarias.pumba` · versión 1.0.2
 
 © 2026 IT Canarias. Todos los derechos reservados.
 

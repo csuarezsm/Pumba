@@ -18,7 +18,9 @@ await new Promise(r => server.listen(0, r));
 const URL_APP = `http://localhost:${server.address().port}/`;
 
 let passed = 0, failed = 0;
-const check = (name, cond, extra = '') => { if (cond) { passed++; console.log('  ✓ ' + name); } else { failed++; console.log('  ✗ ' + name + (extra ? ' → ' + extra : '')); } };
+const check = (name, cond, extra = '') => { if (cond) { passed++; console.log('  ✓ ' + name); } else { failed++; console.log('  ✗ ' + name + (extra ? ' → ' + extra : '')); if (process.env.GITHUB_ACTIONS) console.log('::error::' + (name + (extra ? ' → ' + extra : '')).replace(/\n/g, ' ').slice(0, 900)); } };
+// En GitHub, cualquier fallo inesperado sale también como aviso en la ejecución
+for (const ev of ['uncaughtException', 'unhandledRejection']) process.on(ev, e => { if (process.env.GITHUB_ACTIONS) console.log('::error::' + String(e && e.stack || e).replace(/\n/g, ' ').slice(0, 900)); console.error(e); process.exit(1); });
 
 const browser = await chromium.launch();
 async function fresh(state) {

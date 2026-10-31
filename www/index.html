@@ -339,7 +339,7 @@ function openThemes() {
   $('#thOk').onclick = closeModal;
 }
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -839,7 +839,7 @@ function openWelcome(i) {
 function openGameRules() {
   openModal(`<h3>📖 Reglas del Pumba</h3><div class="sub">Variante de IT Canarias (normas v0.1).</div><div class="rules">
     <h4>Preparación</h4><p>Baraja española de 40 cartas, sin ochos, nueves ni comodines. De 2 a 6 jugadores, cinco cartas cada uno. Quien reparte pone una carta boca arriba (si es especial, vuelve al mazo y se saca otra). Empieza el siguiente al que reparte, en sentido horario, y el reparto rota en cada mano.</p>
-    <h4>Turno</h4><p>Echa una carta del mismo palo o número que la de la mesa. Si no puedes, robas una y termina tu turno, aunque te sirva. Si el mazo se acaba, se barajan las de la mesa menos la última.</p>
+    <h4>Turno</h4><p>Echa una carta del mismo palo o número que la de la mesa. Si no puedes o no te interesa, robas una y termina tu turno, aunque te sirva. Si el mazo se acaba, se barajan las de la mesa menos la última.</p>
     <h4>Cartas especiales</h4><ul>
       <li><b>2</b>: el siguiente roba dos o responde con otro 2. Se acumulan, y quien roba el castigo pierde el turno.</li>
       <li><b>3</b>: cambia el sentido (con dos jugadores no hace nada).</li>

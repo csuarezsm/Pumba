@@ -2,7 +2,7 @@
 
 Juego de cartas Pumba para Android: partida contra la máquina y marcador de puntos para jugar con baraja de verdad.
 App Capacitor + web (`www/`). No usa servidor: todos los datos se guardan en el móvil.
-Paquete: `com.itcanarias.pumba` · versión 1.0.0
+Paquete: `com.itcanarias.pumba` · versión 1.0.1
 
 © 2026 IT Canarias. Todos los derechos reservados.
 
@@ -23,7 +23,7 @@ Se basan en «Pumba – Normas» v0.1 y en las decisiones que cerramos después:
 | Baraja | Española de 40 cartas (sin 8, 9 ni comodines), 5 cartas por jugador |
 | Primera carta | Si es especial (2, 3, sota o caballo), vuelve al mazo y se saca otra |
 | Quién empieza | El siguiente al que reparte, en sentido horario. El reparto rota en cada mano |
-| Turno | Echas una carta del mismo palo o número. Si no puedes, robas una y pasas, aunque te sirva |
+| Turno | Echas una carta del mismo palo o número, o robas una y pasas (también si tienes jugada; la app pide confirmación). La carta robada no se puede echar en ese turno |
 | 2 | El siguiente roba 2 o responde con otro 2. Los doses se acumulan y quien roba pierde el turno. El 2 se echa cumpliendo palo o número |
 | 3 | Cambia el sentido. Con 2 jugadores no hace nada |
 | Sota | Eliges el palo. No libra del castigo del 2. *Opción*: se echa siempre (por defecto) o solo cumpliendo palo o número |

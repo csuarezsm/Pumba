@@ -129,18 +129,19 @@ function playCard(g, pid, id, suit, say) {
   advance(h, pid, skip);
   return true;
 }
-// Robar: con castigo pendiente, roba el castigo y pierde el turno; si no, una carta y pasa (aunque le sirva)
+// Robar: con castigo pendiente, roba el castigo y pierde el turno; si no, una carta y pasa (aunque le sirva).
+// Se puede robar aunque se tenga jugada (por error o porque interese).
 function drawTurn(g, pid) {
   const h = g.play.hand;
   if (h.phase !== 'play' || h.turn !== pid) return false;
-  if (playable(g, h, pid).length && !h.penalty) return false;   // solo se roba si no se puede echar
+  const couldPlay = playable(g, h, pid).length > 0;
   resolveClaims(g, pid);
   h.said = {};
   if (h.penalty) {
     const n = h.penalty, got = drawCards(h, pid, n); h.penalty = 0; h.passes = 0;
     h.log = pname(g, pid) + ' roba ' + got + ' y pierde el turno.';
   } else {
-    (h.lacks[pid] = h.lacks[pid] || []).includes(h.suit) || h.lacks[pid].push(h.suit);
+    if (!couldPlay) (h.lacks[pid] = h.lacks[pid] || []).includes(h.suit) || h.lacks[pid].push(h.suit);
     const got = drawCards(h, pid, 1);
     h.passes = got ? 0 : h.passes + 1;
     h.log = pname(g, pid) + (got ? ' roba y pasa.' : ' no puede robar (no quedan cartas) y pasa.');
@@ -253,7 +254,7 @@ function renderTable(g, R) {
   const mine = h.hands[my] ? arrangeHand(h.hands[my]) : null;
   const okIds = myTurn ? playable(g, h, my) : [];
   if (playSel && !okIds.includes(playSel)) playSel = null;
-  const mustDraw = myTurn && (!okIds.length || h.penalty > 0);
+  const mustDraw = myTurn && (!okIds.length || h.penalty > 0);   // no hay más remedio (o hay castigo pendiente)
   const opp = h.order.filter(p => p !== my);
   const learn = !!g.play.learn;
   const tip = learn && myTurn ? botChoose(g, my) : null;
@@ -265,7 +266,7 @@ function renderTable(g, R) {
   else if (h.penalty) hint = okIds.length ? `Te toca robar <b>${h.penalty}</b> o responder con un <b>2</b>.` : `No tienes un 2: roba <b>${h.penalty}</b> y pierdes el turno.`;
   else if (!okIds.length) hint = 'No tienes jugada: <b>roba</b> una carta y pasa el turno.';
   else if (tip && tip.play) hint = `💡 Echa <b>${theCard(card(tip.play))}</b>${card(tip.play).r === 10 ? ' y pide ' + SUIT_NAME[tip.suit] : ''}.`;
-  else hint = playSel ? 'Pulsa <b>Echar</b>.' : 'Elige una carta que coincida en <b>palo</b> o en <b>número</b>.';
+  else hint = playSel ? 'Pulsa <b>Echar</b>.' : 'Elige una carta que coincida en <b>palo</b> o en <b>número</b>, o <b>roba</b> y pasa.';
   if (needSay && !mustDraw) hint += h.said[my] ? ' <b>¡Pumba! dicho.</b>' : ' Si echas la penúltima, di <b>«¡Pumba!»</b>.';
   const cs = CARD_SIZES.find(x => x[0] === String(S.cardScale || '1')) || CARD_SIZES[0];
   const dirTxt = h.order.length > 2 ? (h.dir > 0 ? '↻ Sentido horario' : '↺ Sentido contrario') : '';
@@ -274,7 +275,7 @@ function renderTable(g, R) {
         <div class="pt-on">${esc(pname(g, p))}${h.hands[p].length === 1 ? ' <span class="pt-pb">¡1!</span>' : ''}</div><div class="pt-ot">${R.st[p].total} pts · ${h.hands[p].length} carta${h.hands[p].length === 1 ? '' : 's'}</div>
         <div class="pt-ob">${'<i></i>'.repeat(Math.min(10, h.hands[p].length))}</div></div>`).join('')}</div>
     <div class="pt-mid">
-      <div class="pt-pile"><button class="pt-btn ${mustDraw ? 'go' : ''}" id="pDeck" ${mustDraw ? '' : 'disabled'}>${backHtml(h.deck.length)}</button><small>Mazo</small></div>
+      <div class="pt-pile"><button class="pt-btn ${mustDraw ? 'go' : ''}" id="pDeck" ${myTurn ? '' : 'disabled'}>${backHtml(h.deck.length)}</button><small>Mazo</small></div>
       <div class="pt-pile"><div class="pt-top">${cardHtml(top)}${h.penalty ? `<span class="pt-pen">+${h.penalty}</span>` : ''}</div><small>Mesa</small></div>
     </div>
     <div class="pt-state">${suitBadge(h.suit)}${dirTxt ? `<span class="pt-dir">${dirTxt}</span>` : ''}</div>
@@ -286,11 +287,14 @@ function renderTable(g, R) {
     <div class="pt-acts">
       <button class="btn-ghost" id="pScore">📋 Puntos</button>
       <button class="${h.said[my] ? 'btn-gold' : 'btn-ghost'} pt-say" id="pSay" ${needSay && !mustDraw ? '' : 'disabled'}>${h.said[my] ? '✓ ¡Pumba!' : '📣 ¡Pumba!'}</button>
-      ${mustDraw ? `<button class="btn-gold" id="pDraw">${h.penalty ? 'Robar ' + h.penalty : 'Robar'}</button>` : ''}
+      ${myTurn ? `<button class="${mustDraw ? 'btn-gold' : 'btn-ghost'}" id="pDraw">${h.penalty ? 'Robar ' + h.penalty : 'Robar'}</button>` : ''}
       <button class="btn-gold" id="pPlay" ${myTurn && playSel ? '' : 'disabled'}>Echar</button>
     </div>` : `<div class="pt-acts"><button class="btn-ghost" id="pScore">📋 Puntos</button></div>`}</div></div>`;
-  const deckB = $('#pDeck'); if (deckB) deckB.onclick = () => humanDraw(g);
-  const drawB = $('#pDraw'); if (drawB) drawB.onclick = () => humanDraw(g);
+  // Robar teniendo jugada: se pide confirmación por si es un error
+  const askDraw = () => { if (mustDraw) return humanDraw(g);
+    confirmBox('Robar y pasar', 'Tienes carta para echar. Si robas, coges una carta y pasas el turno.', 'Robar', () => humanDraw(g)); };
+  const deckB = $('#pDeck'); if (deckB) deckB.onclick = askDraw;
+  const drawB = $('#pDraw'); if (drawB) drawB.onclick = askDraw;
   document.querySelectorAll('[data-card]').forEach(b => b.onclick = () => {
     if (!myTurn) return;
     const id = b.dataset.card;
@@ -392,7 +396,7 @@ function renderPlaySetup() {
       <label class="f"><span>Valor de las figuras<em>Puntos de sota, caballo y rey</em></span>${pick('figures', [['face', '10 · 11 · 12'], ['ten', 'Todas 10']], d.play.figures)}</label>
       <label class="f"><span>🎨 La sota<em>Elige el palo que hay que seguir</em></span>${pick('sotafree', [[true, 'Se echa siempre'], [false, 'Palo o número']], d.play.sotaFree !== false)}</label>
       <label class="f"><span>Cerrar con un 2<em>¿El siguiente roba el castigo antes de contar?</em></span>${pick('closepen', [[true, 'Sí, se cumple'], [false, 'No']], d.play.closePenalty !== false)}</label>
-      <div class="mut" style="margin-top:8px;line-height:1.45">Baraja española de 40 cartas, ${HAND_SIZE} por jugador. Se echa carta del mismo palo o número; si no puedes, robas una y pasas.
+      <div class="mut" style="margin-top:8px;line-height:1.45">Baraja española de 40 cartas, ${HAND_SIZE} por jugador. Se echa carta del mismo palo o número, o se roba una y se pasa (aunque tengas jugada).
         <b>2</b>: el siguiente roba dos o responde con otro 2 (se acumulan) · <b>3</b>: cambia el sentido · <b>sota</b>: eliges palo · <b>caballo</b>: salta al siguiente · <b>rey</b>: sin efecto.
         Al echar la penúltima di «¡Pumba!»: si se te olvida y te lo reclaman, robas dos. Quien se queda sin cartas no suma; los demás suman lo que tienen en la mano.</div>
     </div>

@@ -724,6 +724,8 @@ console.log('Invitación con enlace');
   check('el mensaje lleva el enlace y el código', await p.evaluate(() => { const t = Invitacion.texto('🎲', 'Juego', 'QWER'); return t.includes('unirse.html?c=QWER') && t.includes('*QWER*'); }));
   await p.evaluate(() => { window.ONLINE_URL = 'ws://127.0.0.1:9/ws'; unirseDesdeEnlace('WXYZ'); }); await p.waitForTimeout(200);
   check('al abrir el enlace va a «En línea»', await p.evaluate(() => S.draft.mode === 'online'));
+  check('sin nombre, pide el nombre en una ventana con el código', await p.evaluate(() => !!document.querySelector('#invName') && document.querySelector('#modal').textContent.includes('WXYZ')));
+  check('el código queda guardado por si la app aún no estaba lista', await p.evaluate(() => { Invitacion.entregar('QQ11'); return true; }) && await p.evaluate(() => !localStorage.getItem('invitacionPendiente')));
   check('sin errores en la página', !errors.length, errors.join(' | '));
   await ctx.close();
 }

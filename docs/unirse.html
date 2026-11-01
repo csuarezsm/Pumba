@@ -33,7 +33,7 @@ const c = (new URLSearchParams(location.search).get('c') || '').toUpperCase().re
 const web = 'app/?unirse=' + c, descarga = location.href.replace(/unirse\.html.*$/, '');
 const android = /Android/i.test(navigator.userAgent);
 document.getElementById('code').textContent = c || '····';
-const intent = 'intent://unirse/' + c + '#Intent;scheme=itcpumba;package=com.itcanarias.pumba;S.browser_fallback_url=' + encodeURIComponent(descarga) + ';end';
+const intent = 'intent://unirse/' + c + '?c=' + c + '#Intent;scheme=itcpumba;package=com.itcanarias.pumba;S.browser_fallback_url=' + encodeURIComponent(descarga) + ';end';
 const abrir = document.getElementById('abrir');
 abrir.href = android ? intent : web;
 if (c) {

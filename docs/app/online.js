@@ -121,7 +121,7 @@ function onRenderInicio() {
     </div>
     <div class="sec"><h2>Unirse a una partida</h2>
       <div class="mut" style="margin-bottom:8px">Pide el código a quien la ha creado.</div>
-      <div class="row" style="gap:8px"><input id="onCode" maxlength="4" placeholder="Código" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;width:0;text-transform:uppercase;letter-spacing:4px;font-weight:700;text-align:center">
+      <div class="row" style="gap:8px"><input id="onCode" maxlength="4" placeholder="Código" value="${esc((S.online && S.online.codigo) || '')}" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;width:0;text-transform:uppercase;letter-spacing:4px;font-weight:700;text-align:center">
       <button class="btn-gold" id="onJoin" style="flex:1;min-width:0" ${ON.estado === 'preparando' ? 'disabled' : ''}>Unirse</button></div>
     </div>
     <div class="sec"><h2>Crear una partida</h2>
@@ -328,9 +328,17 @@ window.unirseDesdeEnlace = function (codigo) {
   const go = () => {
     S.draft.mode = 'online'; save();
     if (ON.sala && ON.sala.codigo === codigo) { render(); return; }
+    S.online = S.online || {}; S.online.codigo = codigo; save();
     if (!onNombre()) {
       render();
-      setTimeout(() => { const i = $('#onCode'); if (i) i.value = codigo; const n = $('#onName'); if (n) n.focus(); toast('Escribe tu nombre y pulsa Unirse'); }, 80);
+      // sin nombre todavía: se pide en una ventana y se entra directamente
+      openModal(`<h3>🎟 Partida ${esc(codigo)}</h3><div class="sub">Te han invitado. Escribe tu nombre para entrar.</div>
+        <input id="invName" maxlength="18" placeholder="Tu nombre" autocomplete="off" style="width:100%">
+        <div class="acts"><button class="btn-ghost" id="invNo">Cancelar</button><button class="btn-gold" id="invOk">Entrar</button></div>`);
+      const n = $('#invName'); setTimeout(() => n && n.focus(), 50);
+      const ok = () => { const v = cleanName(n.value).slice(0, 18); if (!v) { toast('Escribe tu nombre'); n.focus(); return; } S.online.nombre = v; save(); closeModal(); go(); };
+      $('#invOk').onclick = ok; n.onkeydown = e => { if (e.key === 'Enter') ok(); };
+      $('#invNo').onclick = closeModal;
       return;
     }
     ON.unirse = codigo; onConectar(); render(); toast('Entrando en la partida ' + codigo + '…');

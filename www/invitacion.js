@@ -19,14 +19,21 @@ function deUrl(url) {
     return limpio(u.searchParams.get('unirse') || u.searchParams.get('c') || (/unirse\/([A-Za-z0-9]{4})/.exec(url) || [])[1]);
   } catch (e) { return null; }
 }
-let pendiente = null;
+// El código se guarda un rato por si la app aún no está lista (o se recarga al actualizarse)
+const CLAVE = 'invitacionPendiente', VALIDO_MS = 15 * 60e3;
+const guardar = c => { try { localStorage.setItem(CLAVE, JSON.stringify({ c, t: Date.now() })); } catch (e) {} };
+function guardado() {
+  try { const o = JSON.parse(localStorage.getItem(CLAVE) || 'null'); if (o && Date.now() - o.t < VALIDO_MS) return limpio(o.c); } catch (e) {}
+  return null;
+}
+const olvidar = () => { try { localStorage.removeItem(CLAVE); } catch (e) {} };
 function entregar(c) {
   c = limpio(c); if (!c) return;
-  if (typeof root.unirseDesdeEnlace === 'function') { try { root.unirseDesdeEnlace(c); return; } catch (e) {} }
-  pendiente = c;
+  guardar(c);
+  if (typeof root.unirseDesdeEnlace === 'function') { try { olvidar(); root.unirseDesdeEnlace(c); } catch (e) {} }
 }
 // La app ya está lista para unirse (por si el enlace llegó antes)
-function listo() { if (pendiente && typeof root.unirseDesdeEnlace === 'function') { const c = pendiente; pendiente = null; root.unirseDesdeEnlace(c); } }
+function listo() { const c = guardado(); if (c && typeof root.unirseDesdeEnlace === 'function') { olvidar(); root.unirseDesdeEnlace(c); } }
 function arrancar() {
   // versión web: ?unirse=ABCD (se quita de la barra para no volver a entrar al recargar)
   try {
@@ -41,6 +48,7 @@ function arrancar() {
       if (A.getLaunchUrl) A.getLaunchUrl().then(r => { if (r && r.url) setTimeout(() => entregar(deUrl(r.url)), 300); }).catch(() => {});
     }
   } catch (e) {}
+  setTimeout(listo, 900);
 }
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar); else setTimeout(arrancar, 0);

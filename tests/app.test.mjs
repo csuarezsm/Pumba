@@ -573,6 +573,50 @@ console.log('Horizontal, tablet y barras de Android');
   await ctx.close();
 }
 
+console.log('Más juegos de IT Canarias');
+{
+  const ctx = await browser.newContext({ viewport: { width: 412, height: 860 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });
+  await ctx.route('https://api.github.com/**', r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ tag_name: 'v0.0.1', assets: [] }) }));
+  const CAT = 'https://catalogo.prueba/juegos.json';
+  await ctx.route(CAT, r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ juegos: [
+    { id: 'ajedrez', nombre: 'Ajedrez', descripcion: 'a', descarga: 'https://csuarezsm.github.io/Ajedrez/', web: 'https://csuarezsm.github.io/Ajedrez/app/' },
+    { id: 'damas', nombre: 'Damas', descripcion: 'd', descarga: 'https://csuarezsm.github.io/Damas/', web: 'https://csuarezsm.github.io/Damas/app/' },
+    { id: 'chinchon', nombre: 'Chinchón', descripcion: 'c', descarga: 'https://csuarezsm.github.io/chinchon-marcador/', web: 'https://csuarezsm.github.io/chinchon-marcador/app/' },
+    { id: 'pumba', nombre: 'Pumba', descripcion: 'p', descarga: 'https://csuarezsm.github.io/Pumba/', web: 'https://csuarezsm.github.io/Pumba/app/' },
+    { id: 'parchis', nombre: 'Parchís <b>', emoji: '🎲', descripcion: 'Nuevo', descarga: 'https://csuarezsm.github.io/Parchis/' },
+    { id: '<mal>', nombre: 'Malo', descarga: 'https://x.example/' },
+    { id: 'malo2', nombre: 'Malo 2', descarga: 'javascript:alert(1)' }] }) }));
+  const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message));
+  await p.addInitScript(([k, ov, cat]) => { window[ov] = ''; window.MAS_JUEGOS_URL = cat; if (!sessionStorage.mj) { localStorage.setItem(k, JSON.stringify({ onboarded: true })); sessionStorage.mj = 1; } }, ['pumba.v1', 'ONLINE_URL', CAT]);
+  await p.goto(URL_APP); await p.waitForTimeout(300);
+  await p.click('#menuBtn');
+  check('el menú tiene «Más juegos de IT Canarias»', !!(await p.$('#mMas')));
+  await p.click('#mMas'); await p.waitForTimeout(200);
+  const base = await p.evaluate(() => [...document.querySelectorAll('.mjc b')].map(b => b.textContent));
+  check('sin conexión: los otros tres juegos, y no este', base.length === 3 && !base.some(n => n.toLowerCase().startsWith('pumba')), base.join());
+  check('con sus iconos dentro de la app', await p.evaluate(() => [...document.querySelectorAll('.mji img')].every(i => i.getAttribute('src').startsWith('juegos/'))));
+  check('el catálogo común se descarga y se guarda', await p.evaluate(async () => await MasJuegos.actualizar(true) && S.masJuegos.juegos.length === 5));
+  await p.evaluate(() => { closeModal(); MasJuegos.abrir(); }); await p.waitForTimeout(200);
+  const nuevos = await p.evaluate(() => [...document.querySelectorAll('.mjc b')].map(b => b.textContent));
+  check('un juego nuevo del catálogo aparece sin actualizar la app', nuevos.length === 4 && nuevos.includes('Parchís b'), nuevos.join());
+  check('los datos raros del catálogo se descartan', !nuevos.includes('Malo') && !nuevos.includes('Malo 2'));
+  const abierto = await p.evaluate(() => { let u = ''; window.openExternal = x => { u = x; }; const i = MasJuegos.juegos().findIndex(j => j.id === 'parchis'); document.querySelector(`[data-mj="${i}"]`).click(); return u; });
+  check('en el navegador, el botón lleva a su página', abierto === 'https://csuarezsm.github.io/Parchis/', abierto);
+  await p.reload(); await p.waitForTimeout(300);
+  check('sin internet usa el último catálogo guardado', await p.evaluate(() => MasJuegos.juegos().some(j => j.id === 'parchis')));
+  check('sin errores en la página', !errors.length, errors.join(' | '));
+  await ctx.close();
+  // en iPhone, cada juego abre su versión web
+  const ci = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+  await ci.route('https://**/*.json', r => r.abort());
+  const q = await ci.newPage();
+  await q.addInitScript(([k, ov]) => { window[ov] = ''; localStorage.setItem(k, JSON.stringify({ onboarded: true, iosHint: true })); }, ['pumba.v1', 'ONLINE_URL']);
+  await q.goto(URL_APP); await q.waitForTimeout(300);
+  const web = await q.evaluate(() => { let u = ''; window.openExternal = x => { u = x; }; MasJuegos.abrir(); document.querySelector('[data-mj="0"]').click(); return u; });
+  check('en iPhone el botón abre la versión web del juego', /\/app\/$/.test(web), web);
+  await ci.close();
+}
+
 console.log('Versión web e iPhone');
 {
   const { execSync } = await import('node:child_process');

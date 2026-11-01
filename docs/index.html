@@ -23,6 +23,13 @@
   .steps b{color:var(--txt)}
   footer{color:var(--mut);font-size:13px;margin-top:26px}
   footer a{color:var(--mut)}
+  .mjh{font-size:20px;margin:28px 0 10px}
+  .mjs{display:flex;flex-direction:column;gap:8px;text-align:left}
+  .mjl{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:10px 12px;color:var(--txt);text-decoration:none}
+  .mjl img{width:52px;height:52px;border-radius:12px;box-shadow:none;flex:0 0 auto}
+  .mjl span{display:flex;flex-direction:column}
+  .mjl small{color:var(--mut);font-size:14px;line-height:1.3}
+  .mjall{margin:10px 0 0}.mjall a{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -48,8 +55,19 @@
     <b>iPhone:</b> abre la versión web en <b>Safari</b>, pulsa <b>Compartir</b> (el cuadrado con la flecha) y elige <b>«Añadir a pantalla de inicio»</b>.
     Te queda un icono como el de cualquier app. Instálala así: si solo la usas desde Safari y pasan semanas sin abrirla, iOS puede borrar sus datos.
   </div>
+  <h2 class="mjh">🎲 Más juegos de IT Canarias</h2>
+  <div class="mjs" id="masJuegos" data-yo="pumba"><a class="mjl" href="https://csuarezsm.github.io/Ajedrez/"><img src="https://csuarezsm.github.io/Ajedrez/icon.png" alt=""><span><b>Ajedrez</b><small>Contra la máquina (6 niveles), con un amigo o en línea, y problemas de mate.</small></span></a><a class="mjl" href="https://csuarezsm.github.io/Damas/"><img src="https://csuarezsm.github.io/Damas/icon.png" alt=""><span><b>Damas</b><small>Damas españolas contra la máquina, con un amigo o en línea, y problemas.</small></span></a><a class="mjl" href="https://csuarezsm.github.io/chinchon-marcador/"><img src="https://csuarezsm.github.io/chinchon-marcador/icon.png" alt=""><span><b>Chinchón</b><small>Marcador de puntos del chinchón y partidas contra la máquina o en línea.</small></span></a></div>
+  <p class="mjall"><a href="https://csuarezsm.github.io/juegos-servidor/">Ver todos los juegos</a></p>
   <footer>© 2026 <a href="https://itcanarias.com">IT Canarias</a>. Todos los derechos reservados. · <a href="privacidad.html">Privacidad</a></footer>
 <script>
+// Más juegos: el catálogo común, si está disponible (si no, se queda la lista de arriba)
+fetch('https://csuarezsm.github.io/juegos-servidor/juegos.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(c => {
+  const box = document.getElementById('masJuegos'); if (!c || !Array.isArray(c.juegos) || !box) return;
+  const e = s => String(s || '').replace(/[&<>"']/g, x => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[x]));
+  const ok = u => /^https:\/\//.test(String(u || ''));
+  const list = c.juegos.filter(j => j && j.id !== box.dataset.yo && ok(j.descarga || j.web)).slice(0, 30);
+  if (list.length) box.innerHTML = list.map(j => `<a class="mjl" href="${e(j.descarga || j.web)}">${ok(j.icono) ? `<img src="${e(j.icono)}" alt="">` : ''}<span><b>${e(j.nombre)}</b><small>${e(j.descripcion)}</small></span></a>`).join('');
+}).catch(() => {});
 // En iPhone/iPad, primero lo suyo
 if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
   const a = document.getElementById('dl'), b = document.getElementById('ios'); a.parentNode.insertBefore(b, a);

@@ -305,6 +305,8 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <script src="marcador.js"></script>
 <script src="juego.js"></script>
 <script src="online.js"></script>
+<script>window.APP_ID = 'pumba';</script>
+<script src="masjuegos.js"></script>
 <script>
 'use strict';
 /* ================= Estado y persistencia ================= */
@@ -359,7 +361,7 @@ function openThemes() {
   $('#thOk').onclick = closeModal;
 }
 
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.1.2';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1461,6 +1463,7 @@ $('#menuBtn').onclick = () => {
     openModal(`<h3>Menú</h3><div class="menu">
       <button id="mArch">📊 Clasificación y partidas</button>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
+      <button id="mMas">🎲 Más juegos de IT Canarias</button>
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
@@ -1479,6 +1482,7 @@ $('#menuBtn').onclick = () => {
       <button id="mEnd">🏁 Terminar partida</button>
       <button id="mArch">📊 Clasificación y partidas</button>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
+      <button id="mMas">🎲 Más juegos de IT Canarias</button>
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
@@ -1497,6 +1501,7 @@ $('#menuBtn').onclick = () => {
   on('mUpd', () => hasUpd() ? openUpdAvail() : checkUpdates(true));
   on('mIOS', () => openIOSInstall(true));
   on('mRoster', openRoster);
+  on('mMas', () => MasJuegos.abrir());
   on('mShareApp', () => { closeModal(); shareApp(); });
   on('mArch', () => openArchive('ranking'));
   on('mAbout', () => {

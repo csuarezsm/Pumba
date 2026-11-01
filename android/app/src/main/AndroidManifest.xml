@@ -30,6 +30,14 @@
         </provider>
     </application>
 
+    <!-- «Más juegos de IT Canarias»: ver si las otras apps están instaladas para abrirlas -->
+    <queries>
+        <package android:name="com.itcanarias.ajedrez" />
+        <package android:name="com.itcanarias.damas" />
+        <package android:name="com.itcanarias.chinchon" />
+        <package android:name="com.itcanarias.pumba" />
+    </queries>
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />

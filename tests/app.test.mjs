@@ -430,7 +430,7 @@ console.log('Jugar contra la máquina desde la pantalla');
   const motores = fs.mkdtempSync(join(os.tmpdir(), 'motores-'));
   fs.mkdirSync(join(motores, 'pumba'));
   for (const f of ['marcador.js', 'juego.js']) fs.copyFileSync(join(ROOT, f), join(motores, 'pumba', f));   // las reglas de ESTA versión de la app
-  for (const j of ['chinchon', 'ajedrez']) fs.cpSync(join(SERV, 'motores', j), join(motores, j), { recursive: true });
+  for (const j of fs.readdirSync(join(SERV, 'motores')).filter(j => j !== 'pumba')) fs.cpSync(join(SERV, 'motores', j), join(motores, j), { recursive: true });
   Object.assign(process.env, { PASO_BOT_MS: '30', SEGUIR_MS: '6000', AUSENTE_MS: '800', PAUSA_RECLAMAR_MS: '5000', MOTORES_DIR: motores, DATA_DIR: fs.mkdtempSync(join(os.tmpdir(), 'juegos-')) });
   const req = createRequire(join(SERV, 'package.json'));
   const { crearServidor } = req('./src/server.js');
@@ -570,6 +570,31 @@ console.log('Horizontal, tablet y barras de Android');
   check('Play: compartir enlaza a Google Play', await p.evaluate(() => isPlay() && !hasUpd()));
   check('© IT Canarias, todos los derechos reservados', /Todos los derechos reservados/.test(await p.textContent('#modal')));
   check('Play: sin errores de JavaScript', !errors.length, errors.join(' | '));
+  await ctx.close();
+}
+
+console.log('Versión web e iPhone');
+{
+  const { execSync } = await import('node:child_process');
+  let iguales = true; try { execSync('diff -r www docs/app', { cwd: fileURLToPath(new URL('..', import.meta.url)) }); } catch (e) { iguales = false; }
+  check('docs/app (versión web) es igual que www/ — si no: npm run web', iguales);
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block',
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+  await ctx.route('https://api.github.com/**', r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ tag_name: 'v99.0.0', assets: [] }) }));
+  const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message));
+  await p.addInitScript(() => { window.ONLINE_URL = ''; if (!sessionStorage.s) { localStorage.setItem('pumba.v1', JSON.stringify({ onboarded: true })); sessionStorage.s = 1; } });
+  await p.goto(URL_APP);
+  let hint = true; try { await p.waitForSelector('#iosOk', { timeout: 3000 }); } catch (e) { hint = false; }
+  check('en Safari de iPhone explica cómo añadirla a la pantalla de inicio', hint);
+  await p.click('#iosOk'); await p.click('#menuBtn');
+  check('en la versión web no hay actualizador de APK', !(await p.$('#mUpd')) && !!(await p.$('#mIOS')));
+  check('y lo vuelve a explicar desde el menú', await p.evaluate(() => { document.querySelector('#mIOS').click(); return !!document.querySelector('#iosOk'); }));
+  check('etiquetas de iPhone: icono, título y pantalla completa', await p.evaluate(() => !!document.querySelector('link[rel="apple-touch-icon"]') && document.querySelector('meta[name="apple-mobile-web-app-title"]').content === 'Pumba'));
+  check('compartir la app: un mensaje para Android e iPhone', await p.evaluate(async () => { let txt = ''; navigator.share = async d => { txt = d.text; }; await shareApp(); return txt.includes('csuarezsm.github.io/Pumba/') && /Android/.test(txt) && /iPhone/.test(txt); }));
+  check('la invitación en línea también vale para iPhone', await p.evaluate(async () => { let txt = ''; navigator.share = async d => { txt = d.text; }; await onInvitar('ABCD'); return txt.includes('ABCD') && txt.includes('csuarezsm.github.io/Pumba/') && /iPhone/.test(txt); }));
+  await p.reload(); await p.waitForTimeout(800);
+  check('el aviso de instalar sale solo una vez', !(await p.$('#iosOk')));
+  check('sin errores en la página', !errors.length, errors.join(' | '));
   await ctx.close();
 }
 

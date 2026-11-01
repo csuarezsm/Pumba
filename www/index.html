@@ -8,8 +8,11 @@
 <meta name="theme-color" content="#16304f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pumba">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Pumba</title>
 <style>
 :root{
@@ -356,7 +359,7 @@ function openThemes() {
   $('#thOk').onclick = closeModal;
 }
 
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -630,7 +633,7 @@ async function checkUpdates(manual) {
     if (manual) showUpdMsg('No se pudo comprobar. Revisa que tengas conexión a internet.', '⚠️');
   }
 }
-function hasUpd() { return !isPlay() && !!(S.updAvail && cmpVer(S.updAvail.v, APP_VERSION) > 0); }
+function hasUpd() { return !isPlay() && isNative() && !!(S.updAvail && cmpVer(S.updAvail.v, APP_VERSION) > 0); }
 function openUpdAvail() { if (hasUpd()) showUpdate(S.updAvail.v, S.updAvail.url, S.updAvail.page, S.updAvail.note); }
 function refreshUpdBadge() {
   const on = hasUpd();
@@ -780,7 +783,7 @@ function openWelcome(i) {
       <div style="display:flex;justify-content:center;gap:6px;margin:14px 0 4px">${WELCOME.map((_, k) => `<i style="width:${k === i ? 20 : 8}px;height:8px;border-radius:4px;background:${k === i ? 'var(--gold)' : 'var(--line)'};display:block"></i>`).join('')}</div>
     </div>
     <div class="acts">${i ? '<button class="btn-ghost" id="wbPrev">‹ Atrás</button>' : '<button class="btn-ghost" id="wbSkip">Saltar</button>'}<button class="btn-gold" id="wbNext">${last ? '¡A jugar!' : 'Siguiente ›'}</button></div>`);
-  const done = () => { S.onboarded = true; save(); closeModal(); };
+  const done = () => { S.onboarded = true; save(); closeModal(); openIOSInstall(false); };
   const sk = $('#wbSkip'); if (sk) sk.onclick = done;
   const pv = $('#wbPrev'); if (pv) pv.onclick = () => openWelcome(i - 1);
   $('#wbNext').onclick = () => last ? done() : openWelcome(i + 1);
@@ -806,10 +809,27 @@ function openGameRules() {
 
 /* ---------- Compartir la app ---------- */
 const APK_URL = 'https://github.com/' + REPO + '/releases/latest/download/pumba.apk';
+const WEB_URL = 'https://csuarezsm.github.io/Pumba/app/';          // versión web instalable (iPhone y cualquier navegador)
+const DESCARGA_URL = 'https://csuarezsm.github.io/Pumba/';         // página con Android e iPhone
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = () => window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+// En Safari del iPhone, explicar una vez cómo instalarla en la pantalla de inicio
+function openIOSInstall(force) {
+  if (!force && (!isIOS() || isStandalone() || isNative() || S.iosHint)) return false;
+  S.iosHint = true; save();
+  openModal(`<h3>📲 Instala Pumba en tu iPhone</h3><div class="sub">Así tendrás su icono como cualquier app, funcionará sin conexión y tus partidas quedarán guardadas.</div>
+    <ol style="padding-left:22px;line-height:1.6;text-align:left"><li>Pulsa el botón <b>Compartir</b> de Safari (el cuadrado con la flecha hacia arriba).</li><li>Baja y elige <b>«Añadir a pantalla de inicio»</b>.</li><li>Pulsa <b>Añadir</b> y abre Pumba desde su icono.</li></ol>
+    <div class="mut">Si solo la usas desde Safari y pasan semanas sin abrirla, iOS puede borrar sus datos. Para no perder nada: ⋮ → Clasificación y partidas → Partidas → Guardar copia de seguridad.</div>
+    <div class="acts"><button class="btn-gold" id="iosOk">Entendido</button></div>`);
+  $('#iosOk').onclick = closeModal;
+  return true;
+}
 async function shareApp() {
-  const text = isPlay()
-    ? '🃏 Pumba — juega al Pumba contra la máquina y lleva los puntos de vuestras partidas. Gratis y sin anuncios.\n\nDescárgala en Google Play:\n' + PLAY_URL
-    : '🃏 Pumba — juega al Pumba contra la máquina y lleva los puntos de vuestras partidas: reenganches, ranking y jornadas. Gratis y sin anuncios.\n\nDescárgala para Android aquí:\n' + APK_URL + '\n\n(Al abrir el archivo, Android puede pedir permiso para instalar apps de fuera de Google Play.)';
+  // Un solo mensaje que vale para quien lo reciba, tenga iPhone o Android
+  const text = '🃏 Pumba — juega al Pumba contra la máquina o en línea con tus amigos, y lleva los puntos de vuestras partidas. Gratis y sin anuncios.\n\n'
+    + (isPlay()
+      ? '🤖 Android (Google Play): ' + PLAY_URL + '\n🍏 iPhone: ' + WEB_URL + '\n(en el iPhone, ábrelo en Safari y pulsa Compartir → «Añadir a pantalla de inicio»)'
+      : '📲 Descárgala aquí, para Android o iPhone:\n' + DESCARGA_URL + '\n\n🤖 Android: «Descargar para Android» (mejor desde Chrome).\n🍏 iPhone: se abre en Safari; pulsa Compartir → «Añadir a pantalla de inicio».');
   try {
     if (isNative()) { await window.Capacitor.Plugins.Share.share({ title: 'Pumba', text, dialogTitle: 'Compartir la app' }); return; }
     if (navigator.share) { await navigator.share({ title: 'Pumba', text }); return; }
@@ -1440,9 +1460,10 @@ $('#menuBtn').onclick = () => {
   if (!g) {
     openModal(`<h3>Menú</h3><div class="menu">
       <button id="mArch">📊 Clasificación y partidas</button>
+      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
-      ${isPlay() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
+      ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
       <button id="mTheme">🎨 Colores y tamaños</button>
       <button id="mAbout">ℹ️ Acerca de</button>
       <button id="mHelp">❓ Cómo se usa</button>
@@ -1457,9 +1478,10 @@ $('#menuBtn').onclick = () => {
       <button id="mShare">📋 Copiar resumen</button>
       <button id="mEnd">🏁 Terminar partida</button>
       <button id="mArch">📊 Clasificación y partidas</button>
+      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
-      ${isPlay() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
+      ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
       <button id="mTheme">🎨 Colores y tamaños</button>
       <button id="mHelp">❓ Cómo se usa</button>
       <button id="mGameRules">📖 Reglas del Pumba</button>
@@ -1473,6 +1495,7 @@ $('#menuBtn').onclick = () => {
   on('mWipe', openWipe);
   on('mTheme', openThemes);
   on('mUpd', () => hasUpd() ? openUpdAvail() : checkUpdates(true));
+  on('mIOS', () => openIOSInstall(true));
   on('mRoster', openRoster);
   on('mShareApp', () => { closeModal(); shareApp(); });
   on('mArch', () => openArchive('ranking'));
@@ -1484,7 +1507,7 @@ $('#menuBtn').onclick = () => {
         • Tus partidas, jugadores y ajustes se guardan <b>solo en este móvil</b>. No hay cuentas ni registro.<br>
         • La app <b>no recoge ningún dato personal</b> ni de uso, y no lleva anuncios ni rastreadores.<br>
         • Si juegas <b>en línea</b>, el nombre que escribes y tus jugadas pasan por el servidor de partidas de IT Canarias (juegos.itcanarias.com) con conexión cifrada. No se guarda nada más y la partida se borra del servidor al poco de terminar.<br>
-        ${isPlay() ? '• Fuera del juego en línea, la app <b>no necesita internet</b> ni envía ningún dato. Las actualizaciones llegan por Google Play.<br>' : '• Además, solo se conecta a internet para <b>buscar actualizaciones</b> en GitHub (no envía ningún dato tuyo; como cualquier web, GitHub ve la dirección IP de la conexión) y, si tú lo pulsas, para abrir PayPal o compartir.<br>'}
+        ${isPlay() ? '• Fuera del juego en línea, la app <b>no necesita internet</b> ni envía ningún dato. Las actualizaciones llegan por Google Play.<br>' : !isNative() ? '• Esta es la <b>versión web</b>: se carga desde GitHub Pages (csuarezsm.github.io) y se actualiza sola al abrirla, sin enviar ningún dato tuyo. Instalada en la pantalla de inicio funciona sin conexión.<br>' : '• Además, solo se conecta a internet para <b>buscar actualizaciones</b> en GitHub (no envía ningún dato tuyo; como cualquier web, GitHub ve la dirección IP de la conexión) y, si tú lo pulsas, para abrir PayPal o compartir.<br>'}
         • La copia de seguridad automática se queda en el móvil; Android puede incluirla en tu copia de Google si la tienes activada.<br>
         • Responsable: IT Canarias · itcanarias.com</div></details>
       ${isPlay() ? '' : `<div class="donate">
@@ -1539,11 +1562,14 @@ setTimeout(async () => {
     if (S.archive.length || S.game) { S.onboarded = true; save(); }
     else if ($('#modal').classList.contains('hidden')) openWelcome(0);
   }
+  if (S.onboarded && $('#modal').classList.contains('hidden')) openIOSInstall(false);
 }, 400);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') autoBackup(false); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') autoCheckUpdates(); });
 render();
 if (S.game) keepAwake();
+// versión web: pedir al navegador que no borre los datos guardados
+try { if (!isNative() && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 if ('serviceWorker' in navigator && isNative()) {
   navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
   if (window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k))).catch(() => {});

@@ -21,6 +21,9 @@ jobs:
           git clone --depth 1 https://github.com/csuarezsm/juegos-servidor "$RUNNER_TEMP/juegos-servidor"
           (cd "$RUNNER_TEMP/juegos-servidor" && npm ci)
           echo "JUEGOS_SERVIDOR=$RUNNER_TEMP/juegos-servidor" >> "$GITHUB_ENV"
+      - name: La versión web (docs/app) tiene que ser igual que www/
+        run: |
+          diff -r www docs/app || { echo "::error::docs/app no está al día: ejecuta npm run web"; exit 1; }
       - name: Pruebas automáticas (si fallan, no se publica)
         run: npx playwright install --with-deps chromium && npm test
       - run: npx cap sync android

@@ -1,6 +1,6 @@
 {
   "name": "pumba-marcador",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "author": "IT Canarias",
   "license": "UNLICENSED",
@@ -9,6 +9,7 @@
     "sync": "npx cap sync android",
     "open": "npx cap open android",
     "test": "node tests/app.test.mjs",
+    "web": "bash tools/publicar-web.sh",
     "icons": "npx @capacitor/assets generate --android --iconBackgroundColor '#16304f' --splashBackgroundColor '#10233d'"
   },
   "dependencies": {

@@ -2,7 +2,7 @@
   "name": "Pumba",
   "short_name": "Pumba",
   "description": "Juega al Pumba contra la máquina y lleva los puntos de vuestras partidas: reenganches, ranking y jornadas.",
-  "id": "/",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

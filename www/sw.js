@@ -1,8 +1,8 @@
 // Service worker: deja la versión web disponible sin conexión.
 // En la app Android no hace falta (los archivos ya van dentro del APK) y podría servir
 // una versión antigua tras actualizar, así que allí se da de baja solo.
-const CACHE = 'pumba-v1.1.0';
-const ASSETS = ['./', 'index.html', 'marcador.js', 'juego.js', 'online.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'];
+const CACHE = 'pumba-v1.1.1';
+const ASSETS = ['./', 'index.html', 'marcador.js', 'juego.js', 'online.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 const NATIVE = self.location.hostname === 'localhost' && self.location.protocol === 'https:';
 
 self.addEventListener('install', e => {

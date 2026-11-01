@@ -30,20 +30,32 @@
   <h1>Pumba</h1>
   <p>Juega al Pumba contra la máquina y lleva los puntos de vuestras partidas. Gratis y sin anuncios.</p>
   <a class="btn" id="dl" href="https://github.com/csuarezsm/Pumba/releases/latest/download/pumba.apk">⬇️ Descargar para Android</a>
+  <a class="btn" id="ios" href="app/" style="background:transparent;color:var(--txt);border:2px solid var(--gold)">📱 iPhone y otros móviles: abrir la versión web</a>
   <div class="mut" id="ver" style="font-size:14px"></div>
   <ul>
     <li>Juega contra la máquina: de 1 a 5 rivales y tres niveles.</li>
     <li>Lleva los puntos de vuestras partidas: eliminados y reenganches.</li>
     <li>Ranking de jugadores y clasificación por jornadas.</li>
     <li>Comparte los resultados por WhatsApp.</li>
-    <li>Funciona sin conexión y se actualiza desde la propia app.</li>
+    <li>Juego en línea: crea una sala y comparte el código por WhatsApp.</li>
+    <li>Funciona sin conexión y se actualiza sola.</li>
   </ul>
-  <div class="steps">
-    <b>Cómo instalarla:</b> pulsa el botón, abre el archivo descargado y toca <b>Instalar</b>.
-    Si Android lo pide, permite instalar apps de esta fuente (la app no está en Google Play).
+  <div class="steps" id="pasosAndroid">
+    <b>Android:</b> pulsa «Descargar para Android», abre el archivo descargado y toca <b>Instalar</b>.
+    Si Android lo pide, permite instalar apps de esta fuente. Ábrelo en <b>Chrome</b>: desde WhatsApp o Samsung Internet la descarga puede fallar.
+  </div>
+  <div class="steps" id="pasosIOS" style="margin-top:12px">
+    <b>iPhone:</b> abre la versión web en <b>Safari</b>, pulsa <b>Compartir</b> (el cuadrado con la flecha) y elige <b>«Añadir a pantalla de inicio»</b>.
+    Te queda un icono como el de cualquier app. Instálala así: si solo la usas desde Safari y pasan semanas sin abrirla, iOS puede borrar sus datos.
   </div>
   <footer>© 2026 <a href="https://itcanarias.com">IT Canarias</a>. Todos los derechos reservados. · <a href="privacidad.html">Privacidad</a></footer>
 <script>
+// En iPhone/iPad, primero lo suyo
+if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+  const a = document.getElementById('dl'), b = document.getElementById('ios'); a.parentNode.insertBefore(b, a);
+  b.style.cssText = ''; b.textContent = '📱 Abrir Pumba para iPhone';
+  document.getElementById('pasosAndroid').parentNode.insertBefore(document.getElementById('pasosIOS'), document.getElementById('pasosAndroid'));
+}
 fetch('https://api.github.com/repos/csuarezsm/Pumba/releases/latest', { cache: 'no-store' })
   .then(r => r.ok ? r.json() : null)
   .then(j => { if (j && j.tag_name) document.getElementById('ver').textContent = 'Última versión: ' + j.tag_name; })

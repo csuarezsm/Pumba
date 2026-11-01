@@ -312,6 +312,7 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <script>window.APP_ID = 'pumba';</script>
 <script src="masjuegos.js"></script>
 <script src="turno.js"></script>
+<script src="contador.js"></script>
 <script>
 'use strict';
 /* ================= Estado y persistencia ================= */
@@ -368,7 +369,7 @@ function openThemes() {
   AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.1.3';
+const APP_VERSION = '1.1.4';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1521,6 +1522,7 @@ $('#menuBtn').onclick = () => {
         • Si juegas <b>en línea</b>, el nombre que escribes y tus jugadas pasan por el servidor de partidas de IT Canarias (juegos.itcanarias.com) con conexión cifrada. No se guarda nada más y la partida se borra del servidor al poco de terminar.<br>
         ${isPlay() ? '• Fuera del juego en línea, la app <b>no necesita internet</b> ni envía ningún dato. Las actualizaciones llegan por Google Play.<br>' : !isNative() ? '• Esta es la <b>versión web</b>: se carga desde GitHub Pages (csuarezsm.github.io) y se actualiza sola al abrirla, sin enviar ningún dato tuyo. Instalada en la pantalla de inicio funciona sin conexión.<br>' : '• Además, solo se conecta a internet para <b>buscar actualizaciones</b> en GitHub (no envía ningún dato tuyo; como cualquier web, GitHub ve la dirección IP de la conexión) y, si tú lo pulsas, para abrir PayPal o compartir.<br>'}
         • La copia de seguridad automática se queda en el móvil; Android puede incluirla en tu copia de Google si la tienes activada.<br>
+        • Al instalarla y al actualizarla, la app avisa de forma <b>anónima</b> al servidor de IT Canarias para contar instalaciones: solo el juego, el tipo de app (Android, iPhone o web) y la versión. Ningún dato tuyo ni identificador.<br>
         • Responsable: IT Canarias · itcanarias.com</div></details>
       ${isPlay() ? '' : `<div class="donate">
         <div class="dt">💛 Apoya el desarrollo de esta app</div>

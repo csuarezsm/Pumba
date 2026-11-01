@@ -310,6 +310,8 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <script src="juego.js"></script>
 <script src="online.js"></script>
 <script>window.APP_ID = 'pumba';</script>
+<script src="i18n-en.js"></script>
+<script src="idioma.js"></script>
 <script src="masjuegos.js"></script>
 <script src="turno.js"></script>
 <script src="contador.js"></script>
@@ -369,7 +371,7 @@ function openThemes() {
   AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.1.4';
+const APP_VERSION = '1.2.0';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1471,6 +1473,7 @@ $('#menuBtn').onclick = () => {
     openModal(`<h3>Menú</h3><div class="menu">
       <button id="mArch">📊 Clasificación y partidas</button>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
+      <button id="mLang">🌐 Idioma · Language</button>
       <button id="mMas">🎲 Más juegos de IT Canarias</button>
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
@@ -1490,6 +1493,7 @@ $('#menuBtn').onclick = () => {
       <button id="mEnd">🏁 Terminar partida</button>
       <button id="mArch">📊 Clasificación y partidas</button>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
+      <button id="mLang">🌐 Idioma · Language</button>
       <button id="mMas">🎲 Más juegos de IT Canarias</button>
       <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
@@ -1509,6 +1513,7 @@ $('#menuBtn').onclick = () => {
   on('mUpd', () => hasUpd() ? openUpdAvail() : checkUpdates(true));
   on('mIOS', () => openIOSInstall(true));
   on('mRoster', openRoster);
+  on('mLang', () => Idioma.elegir());
   on('mMas', () => MasJuegos.abrir());
   on('mShareApp', () => { closeModal(); shareApp(); });
   on('mArch', () => openArchive('ranking'));

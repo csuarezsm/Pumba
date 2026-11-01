@@ -574,6 +574,29 @@ console.log('Horizontal, tablet y barras de Android');
   await ctx.close();
 }
 
+console.log('Idioma inglés');
+{
+  const ctx = await browser.newContext({ viewport: { width: 412, height: 860 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });
+  await ctx.route('https://**', r => r.abort());
+  const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message));
+  await p.addInitScript(([k, ov]) => { window[ov] = ''; navigator.share = async d => { window.__compartido = d.text; }; if (!sessionStorage.l) { localStorage.setItem(k, JSON.stringify({ onboarded: true, iosHint: true })); sessionStorage.l = 1; } }, ['pumba.v1', 'ONLINE_URL']);
+  await p.goto(URL_APP); await p.waitForTimeout(400);
+  check('por defecto (pruebas) en español', await p.evaluate(() => Idioma.lang() === 'es' && !document.body.textContent.includes('Keep the scores')));
+  await p.click('#menuBtn'); await p.click('#mLang');
+  check('el menú tiene el selector de idioma', await p.evaluate(() => document.querySelectorAll('[data-lang]').length === 2));
+  await Promise.all([p.waitForNavigation(), p.click('[data-lang="en"]')]); await p.waitForTimeout(500);
+  check('al elegir inglés, la app se ve en inglés', await p.evaluate(() => Idioma.lang() === 'en' && document.body.textContent.includes('Keep the scores') && document.documentElement.lang === 'en'));
+  await p.click('#menuBtn');
+  check('y el menú también', await p.evaluate(() => document.querySelector('#modal').textContent.includes('Share the app') && !document.querySelector('#modal').textContent.includes('Compartir la app')));
+  check('compartir la app en inglés', await p.evaluate(async () => { closeModal(); await shareApp(); const t = window.__compartido || ''; return /free/i.test(t) && /iPhone/.test(t) && !/Gratis/.test(t); }), await p.evaluate(() => window.__compartido));
+  check('las fechas y números en inglés', await p.evaluate(() => new Date(2026, 10, 1).toLocaleDateString('es-ES', { month: 'long' }) === 'November'));
+  await p.click('#menuBtn'); await p.click('#mLang');
+  await Promise.all([p.waitForNavigation(), p.click('[data-lang="es"]')]); await p.waitForTimeout(400);
+  check('y se vuelve al español', await p.evaluate(() => Idioma.lang() === 'es' && !document.body.textContent.includes('Keep the scores')));
+  check('sin errores en la página', !errors.length, errors.join(' | '));
+  await ctx.close();
+}
+
 console.log('Contador anónimo de instalaciones');
 {
   const ctx = await browser.newContext({ viewport: { width: 412, height: 860 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });

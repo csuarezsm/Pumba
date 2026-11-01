@@ -2,7 +2,7 @@
 
 Juego de cartas Pumba para Android: partida contra la máquina y marcador de puntos para jugar con baraja de verdad.
 App Capacitor + web (`www/`). No usa servidor: todos los datos se guardan en el móvil.
-Paquete: `com.itcanarias.pumba` · versión 1.1.4
+Paquete: `com.itcanarias.pumba` · versión 1.2.0
 
 **iPhone y navegadores**: la misma app se publica como versión web instalable en https://csuarezsm.github.io/Pumba/app/ (GitHub Pages, carpeta `docs/app`, copia de `www/`). En Safari: Compartir → «Añadir a pantalla de inicio». Tras cambiar `www/`, ejecuta `npm run web` antes del commit: las pruebas y el workflow comprueban que `docs/app` está al día. La página de descarga (https://csuarezsm.github.io/Pumba/) ofrece Android e iPhone, y el mensaje de «Compartir la app» enlaza a ella.
 
@@ -82,3 +82,7 @@ En el menú ⋮ → «🎲 Más juegos de IT Canarias» y en la página de desca
 ## Aviso de turno en línea
 
 En una partida en línea, cuando pasa a ser tu turno suena un «ding-dong» corto y el móvil vibra (`www/turno.js`, el mismo archivo en todas las apps; sonido sintetizado). Se quita en ⋮ → Colores… → «🔔 Aviso de turno en línea». Suena con la app abierta; con la app en segundo plano el sistema puede pausarla.
+
+## Idiomas (español e inglés)
+
+⋮ → «🌐 Idioma · Language». La primera vez se usa el idioma del móvil (español si empieza por «es»; si no, inglés). La app está escrita en español y `www/idioma.js` traduce lo que se ve con el diccionario `www/i18n-en.js` (los dos, **los mismos archivos en todas las apps**): textos, plantillas con datos ({1}, {2}…), mensajes para compartir, imágenes, fechas y números. Cuando se añade o cambia un texto en español, hay que añadir su traducción al diccionario común (`comun/` en el chat de desarrollo) y copiarlo a todas las apps. Para otro idioma: un `i18n-<código>.js` y su nombre en `IDIOMAS` de `idioma.js`.

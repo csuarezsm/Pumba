@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pumba — unirse a la partida</title>
+<meta name="description" content="Te han invitado a una partida de Pumba. Toca para entrar.">
+<meta property="og:title" content="🃏 ¡Te invitan a una partida de Pumba!">
+<meta property="og:description" content="Toca para entrar en la partida. Gratis, para Android e iPhone.">
+<meta property="og:image" content="https://csuarezsm.github.io/Pumba/icon.png">
+<link rel="icon" href="icon.png">
+<style>
+  :root{--bg:#10233d;--card:#1d3d63;--txt:#f7f3ec;--mut:#cdbfae;--gold:#ff9f1c}
+  body{margin:0;background:var(--bg);color:var(--txt);font:17px/1.5 system-ui,-apple-system,Roboto,sans-serif;padding:30px 20px;max-width:520px;margin:0 auto;text-align:center}
+  img{width:110px;height:110px;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+  h1{font-size:26px;margin:18px 0 6px}
+  .code{font-size:44px;font-weight:800;letter-spacing:10px;color:var(--gold);margin:6px 0 16px}
+  .btn{display:block;background:var(--gold);color:#221400;text-decoration:none;font-weight:800;font-size:19px;padding:17px;border-radius:16px;margin:10px 0}
+  .btn.alt{background:transparent;color:var(--txt);border:2px solid var(--gold)}
+  p{color:var(--mut)}
+</style>
+</head>
+<body>
+  <img src="icon.png" alt="">
+  <h1>🃏 Partida de Pumba</h1>
+  <p>Te han invitado a jugar. El código de la partida es:</p>
+  <div class="code" id="code">····</div>
+  <a class="btn" id="abrir" href="app/">▶ Entrar en la partida</a>
+  <a class="btn alt" id="instalar" href="./">⬇️ ¿No tienes la app? Descárgala gratis</a>
+  <p id="nota">Si no se abre sola, pulsa «Entrar en la partida». En la app: En línea → Unirse y pon el código.</p>
+<script>
+const c = (new URLSearchParams(location.search).get('c') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+const web = 'app/?unirse=' + c, descarga = location.href.replace(/unirse\.html.*$/, '');
+const android = /Android/i.test(navigator.userAgent);
+document.getElementById('code').textContent = c || '····';
+const intent = 'intent://unirse/' + c + '#Intent;scheme=itcpumba;package=com.itcanarias.pumba;S.browser_fallback_url=' + encodeURIComponent(descarga) + ';end';
+const abrir = document.getElementById('abrir');
+abrir.href = android ? intent : web;
+if (c) {
+  // Android: abre la app si está instalada (si no, Chrome va a la página de descarga). iPhone y ordenador: la versión web.
+  setTimeout(() => { location.href = android ? intent : web; }, 250);
+}
+</script>
+</body>
+</html>

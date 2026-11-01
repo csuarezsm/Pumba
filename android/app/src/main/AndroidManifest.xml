@@ -19,6 +19,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Invitaciones: itcpumba://unirse/CÓDIGO abre la app en la partida -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="itcpumba" android:host="unirse" />
+            </intent-filter>
         </activity>
 
         <provider
@@ -36,6 +43,7 @@
         <package android:name="com.itcanarias.damas" />
         <package android:name="com.itcanarias.chinchon" />
         <package android:name="com.itcanarias.pumba" />
+        <package android:name="com.itcanarias.parchis" />
     </queries>
 
     <!-- Permissions -->

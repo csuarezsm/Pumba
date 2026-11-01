@@ -1,6 +1,7 @@
 /* Aviso de turno en el juego en línea (IT Canarias). © 2026 IT Canarias. Todos los derechos reservados.
-   El mismo archivo en todas las apps. Cuando en una partida en línea pasa a ser tu turno, suena un aviso
-   corto y vibra. Se puede quitar en ⋮ → Colores… → «Aviso de turno en línea» (S.avisoTurno = false).
+   El mismo archivo en todas las apps. Cuando pasa a ser tu turno (en línea o después de jugar la máquina), suena un aviso
+   corto y vibra. Se puede quitar en ⋮ → Colores… → «Aviso de turno» (S.avisoTurno = false).
+   recordar(): un aviso más suave para cuando falta que pulses «Seguir».
    El sonido se sintetiza (sin archivos de audio). */
 (function (root) {
 'use strict';
@@ -37,11 +38,21 @@ function sonar() {
   try { campanita(); } catch (e) {}
   return true;
 }
+// Contra la máquina: suena cuando vuelve a ser tu turno después de jugar ella (no al seguir tú, por ejemplo con un 6)
+let fuera = false, ultimaClave = null;
+function local(miTurno, clave) {
+  if (!miTurno) { fuera = true; return false; }
+  const toca = fuera && clave !== ultimaClave;
+  fuera = false; ultimaClave = clave;
+  return toca ? sonar() : false;
+}
+// Recordatorio (por ejemplo, «pulsa Seguir»): aviso aunque haya sonado hace poco
+function recordar() { ultimo = 0; return sonar(); }
 // Opción para la ventana de ajustes
-const opcionHtml = () => `<label class="f" style="margin-bottom:10px"><span>🔔 Aviso de turno en línea<em>Sonido y vibración cuando te toca en una partida en línea</em></span><input type="checkbox" class="tg" id="thTurno" ${activo() ? 'checked' : ''}></label>`;
+const opcionHtml = () => `<label class="f" style="margin-bottom:10px"><span>🔔 Aviso de turno<em>Sonido y vibración cuando te toca, en línea y contra la máquina</em></span><input type="checkbox" class="tg" id="thTurno" ${activo() ? 'checked' : ''}></label>`;
 function enlazar() {
   const el = document.getElementById('thTurno'); if (!el) return;
   el.onchange = e => { S.avisoTurno = e.target.checked; save(); if (S.avisoTurno) { ultimo = 0; sonar(); } };
 }
-root.AvisoTurno = { sonar, activo, opcionHtml, enlazar, veces: 0 };
+root.AvisoTurno = { sonar, local, recordar, activo, opcionHtml, enlazar, veces: 0 };
 })(typeof self !== 'undefined' ? self : globalThis);

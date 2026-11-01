@@ -75,6 +75,7 @@ function onRecibirSala(sala) {
   S.online = S.online || {}; S.online.enSala = !!sala; save();
   if (sala && sala.partida) {
     const p = sala.partida;
+    SonidoCartas.mesa({ mano: p.mano, turnos: p.turnos, fase: p.fase, mazo: p.mazo, mesa: p.mesa, fin: sala.estado === 'fin' }, false);
     const miTurno = sala.estado === 'jugando' && p.turno === sala.yo && p.fase === 'play';
     const clave = p.mano + '|' + p.turnos;
     if (miTurno && ON.ultimoTurno !== clave) { ON.ultimoTurno = clave; AvisoTurno.sonar(); }   // sonido y vibración (se quita en ajustes)
@@ -82,6 +83,7 @@ function onRecibirSala(sala) {
     if (!miTurno || !p.miMano || p.miMano.length !== 2) ON.say = false;
     if (p.olvido && p.olvido !== sala.yo && p.miMano && (!antes || !antes.partida || antes.partida.olvido !== p.olvido)) vibrate([20, 40, 20]);
     if (sala.estado === 'fin') onArchivar(p);
+    onRecordarSeguir(sala);
   }
   if (!sala && !antes) return;
   if (!S.game) render();
@@ -182,8 +184,7 @@ function onRenderEspera(s) {
 }
 
 async function onInvitar(codigo) {
-  const enlace = (typeof isPlay === 'function' && isPlay()) ? '🤖 Android: ' + PLAY_URL + '\n🍏 iPhone: ' + WEB_URL : DESCARGA_URL;
-  const text = `🃏 ¡Juega al Pumba conmigo!\n\nAbre la app Pumba → En línea → Unirse y pon el código:\n\n*${codigo}*\n\n¿No tienes la app? Es gratis, para Android e iPhone:\n${enlace}`;
+  const text = Invitacion.texto('🃏', 'Pumba', codigo);
   try {
     if (isNative()) { await window.Capacitor.Plugins.Share.share({ title: 'Partida de Pumba', text, dialogTitle: 'Invitar' }); return; }
     if (navigator.share) { await navigator.share({ title: 'Partida de Pumba', text }); return; }
@@ -288,7 +289,7 @@ function onResultadoHtml(s, p, nombre) {
   }).join('');
   const listo = p.listos.includes(yo);
   const humanos = s.asientos.filter(a => !a.bot && a.conectado);
-  const faltan = humanos.filter(a => !p.listos.includes(a.id)).map(a => a.nombre);
+  const faltan = humanos.filter(a => !p.listos.includes(a.id) && (!p.esperan || p.esperan.includes(a.id))).map(a => a.nombre);   // al eliminado que no se reengancha no se le espera
   return `<div class="sec"><h2 style="margin-bottom:4px">${titulo}</h2><div class="mut" style="margin-bottom:10px">Mano ${p.mano} anotada.${p.puedeReenganchar ? ' Has pasado de ' + p.limite + ': puedes reengancharte si quieres.' : ''}</div>${rows}
     <div class="on-acts">${p.puedeReenganchar ? `<button class="btn-ghost" id="prRebuy">Reenganchar (${p.puntosReenganche})</button>` : ''}
       ${listo ? `<div class="mut" style="flex:1;text-align:center">⏳ Esperando a ${esc(faltan.join(', ') || 'los demás')}…</div>` : '<button class="btn-gold" id="prNext">Seguir</button>'}</div></div>`;
@@ -315,3 +316,45 @@ function onPuntos(p, nombre) {
 
 // Al abrir la app: si estabas en una partida en línea, vuelve a ella
 document.addEventListener('DOMContentLoaded', () => { try { if (S.online && S.online.enSala) onConectar(); } catch (e) {} });
+
+/* ---------- Invitación con enlace: entrar directamente en la sala ---------- */
+function onUnirsePendiente(t0) {
+  if (!ON.unirse) return;
+  if (ON.estado === 'conectado' && ON.listo) { const c = ON.unirse; ON.unirse = null; onEnviar({ t: 'unirse', codigo: c, nombre: onNombre() }); return; }
+  if (Date.now() - t0 > 20000) { ON.unirse = null; toast('Sin conexión con el servidor. Prueba otra vez en un momento.'); return; }
+  setTimeout(() => onUnirsePendiente(t0), 300);
+}
+window.unirseDesdeEnlace = function (codigo) {
+  const go = () => {
+    S.draft.mode = 'online'; save();
+    if (ON.sala && ON.sala.codigo === codigo) { render(); return; }
+    if (!onNombre()) {
+      render();
+      setTimeout(() => { const i = $('#onCode'); if (i) i.value = codigo; const n = $('#onName'); if (n) n.focus(); toast('Escribe tu nombre y pulsa Unirse'); }, 80);
+      return;
+    }
+    ON.unirse = codigo; onConectar(); render(); toast('Entrando en la partida ' + codigo + '…');
+    onUnirsePendiente(Date.now());
+  };
+  if (ON.sala && ON.sala.codigo !== codigo && ON.sala.estado === 'jugando') { toast('Antes sal de la partida en línea en la que estás'); return; }
+  if (S.game) confirmBox('Partida en línea', 'Tienes una partida empezada en este móvil. Se guardará en el historial y entrarás en la partida a la que te invitan.', 'Entrar', () => { finishAndNew(false); S.game = null; go(); });
+  else go();
+};
+setTimeout(() => { try { Invitacion.listo(); } catch (e) {} }, 0);
+
+/* ---------- Recordatorio de «Seguir» al terminar una mano ---------- */
+function onFaltaSeguir(s) {
+  const p = s && s.partida;
+  return !!(p && s.estado === 'jugando' && p.fase === 'over' && !p.listos.includes(s.yo) && (!p.esperan || p.esperan.includes(s.yo)));
+}
+function onRecordarSeguir(sala) {
+  if (!onFaltaSeguir(sala)) return;
+  const clave = sala.codigo + ':' + sala.partida.mano;
+  if (ON.recClave === clave) return;
+  ON.recClave = clave;
+  [12000, 24000, 40000].forEach(ms => setTimeout(() => {
+    const s = ON.sala;
+    if (!onFaltaSeguir(s) || s.codigo + ':' + s.partida.mano !== clave) return;
+    AvisoTurno.recordar(); toast('Pulsa «Seguir» para jugar la siguiente mano');
+  }, ms));
+}

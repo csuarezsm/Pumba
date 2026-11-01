@@ -250,6 +250,7 @@ function renderTable(g, R) {
   const h = g.play.hand, my = me(g), myOut = !h.order.includes(my);
   $('#subtitle').textContent = 'Mano ' + (R.hand + 1) + ' · contra la máquina';
   const top = topOf(h), myTurn = h.turn === my && h.phase === 'play';
+  AvisoTurno.local(myTurn, g.id + ':' + R.hand + ':' + h.turns);   // aviso de que te toca (se quita en ajustes)
   const mine = h.hands[my] ? arrangeHand(h.hands[my]) : null;
   const okIds = myTurn ? playable(g, h, my) : [];
   if (playSel && !okIds.includes(playSel)) playSel = null;
@@ -309,7 +310,7 @@ function renderTable(g, R) {
   if (h.phase === 'over') { showHandResult(g); return; }
   if (myOut) { runBotsInstant(g); save(); render(); return; }
   // Si un rival se ha olvidado de decir «¡Pumba!», da algo más de tiempo para reclamárselo
-  if (isBot(g, h.turn)) playTimer = setTimeout(() => { if (S.game !== g) return; botStep(g); save(); render(); }, (window.PLAY_DELAY || 800) * (canClaim ? 2.5 : 1));
+  if (isBot(g, h.turn)) playTimer = setTimeout(() => { if (S.game !== g) return; botStep(g); save(); render(); }, (window.PLAY_DELAY || (S.speed === 'rapida' ? 400 : 800)) * (canClaim ? 2.5 : 1));
 }
 function humanDraw(g) {
   const h = g.play.hand, my = me(g);

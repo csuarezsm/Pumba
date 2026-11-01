@@ -583,7 +583,7 @@ console.log('Idioma inglés');
   await p.goto(URL_APP); await p.waitForTimeout(400);
   check('por defecto (pruebas) en español', await p.evaluate(() => Idioma.lang() === 'es' && !document.body.textContent.includes('Keep the scores')));
   await p.click('#menuBtn'); await p.click('#mLang');
-  check('el menú tiene el selector de idioma', await p.evaluate(() => document.querySelectorAll('[data-lang]').length === 2));
+  check('el menú tiene el selector de idioma', await p.evaluate(() => document.querySelectorAll('[data-lang]').length === 5));
   await Promise.all([p.waitForNavigation(), p.click('[data-lang="en"]')]); await p.waitForTimeout(500);
   check('al elegir inglés, la app se ve en inglés', await p.evaluate(() => Idioma.lang() === 'en' && document.body.textContent.includes('Keep the scores') && document.documentElement.lang === 'en'));
   await p.click('#menuBtn');
@@ -593,6 +593,14 @@ console.log('Idioma inglés');
   await p.click('#menuBtn'); await p.click('#mLang');
   await Promise.all([p.waitForNavigation(), p.click('[data-lang="es"]')]); await p.waitForTimeout(400);
   check('y se vuelve al español', await p.evaluate(() => Idioma.lang() === 'es' && !document.body.textContent.includes('Keep the scores')));
+
+  for (const [l, t] of [['fr', 'Plus de jeux'], ['de', 'Mehr Spiele'], ['it', 'Altri giochi']]) {
+    await p.evaluate(l => localStorage.setItem('idioma', l), l); await p.reload(); await p.waitForTimeout(400);
+    await p.click('#menuBtn');
+    check(`en ${l}: la app se ve en ese idioma`, await p.evaluate(([l, t]) => document.documentElement.lang === l && document.querySelector('#modal').textContent.includes(t), [l, t]));
+    await p.evaluate(() => closeModal());
+  }
+  await p.evaluate(() => localStorage.setItem('idioma', 'es')); await p.reload(); await p.waitForTimeout(300);
   check('sin errores en la página', !errors.length, errors.join(' | '));
   await ctx.close();
 }
@@ -635,7 +643,7 @@ console.log('Más juegos de IT Canarias');
   check('el menú tiene «Más juegos de IT Canarias»', !!(await p.$('#mMas')));
   await p.click('#mMas'); await p.waitForTimeout(200);
   const base = await p.evaluate(() => [...document.querySelectorAll('.mjc b')].map(b => b.textContent));
-  check('sin conexión: los otros tres juegos, y no este', base.length === 3 && !base.some(n => n.toLowerCase().startsWith('pumba')), base.join());
+  check('sin conexión: los otros cuatro juegos, y no este', base.length === 4 && !base.some(n => n.toLowerCase().startsWith('pumba')), base.join());
   check('con sus iconos dentro de la app', await p.evaluate(() => [...document.querySelectorAll('.mji img')].every(i => i.getAttribute('src').startsWith('juegos/'))));
   check('el catálogo común se descarga y se guarda', await p.evaluate(async () => await MasJuegos.actualizar(true) && S.masJuegos.juegos.length === 5));
   await p.evaluate(() => { closeModal(); MasJuegos.abrir(); }); await p.waitForTimeout(200);
@@ -683,6 +691,39 @@ console.log('Versión web e iPhone');
   check('la invitación en línea también vale para iPhone', await p.evaluate(async () => { let txt = ''; navigator.share = async d => { txt = d.text; }; await onInvitar('ABCD'); return txt.includes('ABCD') && txt.includes('csuarezsm.github.io/Pumba/') && /iPhone/.test(txt); }));
   await p.reload(); await p.waitForTimeout(800);
   check('el aviso de instalar sale solo una vez', !(await p.$('#iosOk')));
+  check('sin errores en la página', !errors.length, errors.join(' | '));
+  await ctx.close();
+}
+
+console.log('Sonidos y velocidad de la máquina');
+{
+  const { p, ctx, errors } = await fresh();
+  await p.waitForTimeout(300);
+  check('los sonidos están activados por defecto', await p.evaluate(() => SonidoCartas.activo()));
+  check('detecta lo que pasa en la mesa', await p.evaluate(() => { SonidoCartas.reiniciar(); const r = [];
+    SonidoCartas.mesa({ mano: 1, turnos: 0, fase: 'play', mazo: 30, mesa: 1 });
+    r.push(SonidoCartas.mesa({ mano: 1, turnos: 1, fase: 'play', mazo: 30, mesa: 2 }));
+    r.push(SonidoCartas.mesa({ mano: 1, turnos: 2, fase: 'play', mazo: 29, mesa: 2 }));
+    r.push(SonidoCartas.mesa({ mano: 1, turnos: 2, fase: 'over', mazo: 29, mesa: 2 }));
+    r.push(SonidoCartas.mesa({ mano: 2, turnos: 0, fase: 'play', mazo: 30, mesa: 1 }));
+    r.push(SonidoCartas.mesa({ mano: 2, turnos: 0, fase: 'play', mazo: 30, mesa: 1, fin: true }));
+    return r.join() === 'carta,robar,mano,repartir,fin'; }));
+  await p.click('#menuBtn'); await p.click('#mTheme');
+  await p.click('#thSound'); await p.click('[data-speed="rapida"]');
+  check('se pueden quitar los sonidos y acelerar la máquina', await p.evaluate(() => S.sound === false && S.speed === 'rapida' && !SonidoCartas.activo() && SonidoCartas.play('carta') === false && JSON.parse(localStorage.getItem(KEY)).speed === 'rapida'));
+  check('sin errores en la página', !errors.length, errors.join(' | '));
+  await ctx.close();
+}
+
+console.log('Invitación con enlace');
+{
+  const { p, ctx, errors } = await fresh();
+  await p.waitForTimeout(300);
+  check('el enlace de la invitación lleva a la página del juego', await p.evaluate(() => Invitacion.enlace('ABCD') === 'https://csuarezsm.github.io/Pumba/unirse.html?c=ABCD'));
+  check('el código se lee del enlace de la app y de la web', await p.evaluate(() => Invitacion.deUrl('itcpumba://unirse/ab12') === 'AB12' && Invitacion.deUrl('https://x.y/app/?unirse=wxyz') === 'WXYZ' && Invitacion.deUrl('https://x.y/app/') === null));
+  check('el mensaje lleva el enlace y el código', await p.evaluate(() => { const t = Invitacion.texto('🎲', 'Juego', 'QWER'); return t.includes('unirse.html?c=QWER') && t.includes('*QWER*'); }));
+  await p.evaluate(() => { window.ONLINE_URL = 'ws://127.0.0.1:9/ws'; unirseDesdeEnlace('WXYZ'); }); await p.waitForTimeout(200);
+  check('al abrir el enlace va a «En línea»', await p.evaluate(() => S.draft.mode === 'online'));
   check('sin errores en la página', !errors.length, errors.join(' | '));
   await ctx.close();
 }

@@ -6,15 +6,16 @@
    - lo que no es página: compartir (navigator.share, portapapeles, Capacitor Share), imágenes dibujadas (canvas),
      fechas y números (toLocale…).
    El idioma se guarda en localStorage («idioma»). La primera vez se usa el del móvil (español si empieza por «es»).
+   Idiomas: español (el original), inglés, francés, alemán e italiano.
    Para añadir un idioma: un i18n-<código>.js con window.I18N['<código>'] = { 'texto en español': 'traducción', … } y su nombre en IDIOMAS. */
 (function (root) {
 'use strict';
-const IDIOMAS = { es: 'Español', en: 'English' };
+const IDIOMAS = { es: 'Español', en: 'English', fr: 'Français', de: 'Deutsch', it: 'Italiano' };
 const CLAVE = 'idioma';
 function detectar() {
   if (typeof navigator !== 'undefined' && navigator.webdriver) return 'es';      // pruebas automáticas: siempre en español
-  const l = (navigator.languages && navigator.languages[0]) || navigator.language || 'es';
-  return /^es\b/i.test(l) ? 'es' : 'en';
+  const l = String((navigator.languages && navigator.languages[0]) || navigator.language || 'es').slice(0, 2).toLowerCase();
+  return IDIOMAS[l] ? l : 'en';
 }
 let lang = 'es';
 try { lang = localStorage.getItem(CLAVE) || detectar(); if (!IDIOMAS[lang]) lang = 'es'; localStorage.setItem(CLAVE, lang); } catch (e) {}
@@ -81,13 +82,20 @@ function trSin(s, d) {
   return null;
 }
 // Cartas de la baraja española: «el 7 de oros», «la sota de copas»
-const PALOS = { en: { oros: 'Coins', copas: 'Cups', espadas: 'Swords', bastos: 'Clubs' } };
-const FIG = { en: { as: 'Ace', '1': 'Ace', sota: 'Jack', '10': 'Jack', caballo: 'Knight', '11': 'Knight', rey: 'King', '12': 'King' } };
+const PALOS = { en: { oros: 'Coins', copas: 'Cups', espadas: 'Swords', bastos: 'Clubs' }, fr: { oros: 'deniers', copas: 'coupes', espadas: 'épées', bastos: 'bâtons' },
+  de: { oros: 'Münzen', copas: 'Kelche', espadas: 'Schwerter', bastos: 'Stäbe' }, it: { oros: 'denari', copas: 'coppe', espadas: 'spade', bastos: 'bastoni' } };
+const FIG = { en: { as: 'Ace', '1': 'Ace', sota: 'Jack', '10': 'Jack', caballo: 'Knight', '11': 'Knight', rey: 'King', '12': 'King' },
+  fr: { as: 'as', '1': 'as', sota: 'valet', '10': 'valet', caballo: 'cavalier', '11': 'cavalier', rey: 'roi', '12': 'roi' },
+  de: { as: 'Ass', '1': 'Ass', sota: 'Bube', '10': 'Bube', caballo: 'Reiter', '11': 'Reiter', rey: 'König', '12': 'König' },
+  it: { as: 'asso', '1': 'asso', sota: 'fante', '10': 'fante', caballo: 'cavallo', '11': 'cavallo', rey: 're', '12': 're' } };
+// «el 7 de oros» en cada idioma
+const CARTA = { en: (a, f, p) => (a ? 'the ' : '') + f + ' of ' + p, fr: (a, f, p) => (a ? (/^[aeiou]/i.test(f) ? "l'" : 'le ') : '') + f + ' de ' + p,
+  de: (a, f, p) => p + '-' + f, it: (a, f, p) => (a ? (/^[aeiou]/i.test(f) ? "l'" : f === 're' ? 'il ' : 'il ') : '') + f + ' di ' + p };
 function carta(s) {
   const m = /^(el |la )?(as|[1-9]|1[0-2]|sota|caballo|rey) de (oros|copas|espadas|bastos)([.,!:;]?)$/i.exec(s);
   if (!m || !PALOS[lang]) return null;
   const r = m[2].toLowerCase(), f = FIG[lang][r] || r;
-  return (m[1] ? 'the ' : '') + f + ' of ' + PALOS[lang][m[3].toLowerCase()] + m[4];
+  return CARTA[lang](!!m[1], f, PALOS[lang][m[3].toLowerCase()]) + m[4];
 }
 // Para textos con varias líneas (mensajes para compartir)
 function trTexto(txt) {
@@ -160,7 +168,7 @@ function parches() {
 /* ---------- Elegir idioma (menú) ---------- */
 function elegir() {
   openModal(`<h3>🌐 Idioma · Language</h3><div class="menu">${Object.entries(IDIOMAS).map(([k, n]) => `<button data-lang="${k}" class="${k === lang ? 'btn-gold' : ''}">${k === lang ? '✓ ' : ''}${n}</button>`).join('')}</div>
-    <div class="acts"><button class="btn-ghost" id="lgX">${lang === 'es' ? 'Cerrar' : 'Close'}</button></div>`);
+    <div class="acts"><button class="btn-ghost" id="lgX">${{ es: 'Cerrar', en: 'Close', fr: 'Fermer', de: 'Schließen', it: 'Chiudi' }[lang] || 'Close'}</button></div>`);
   document.getElementById('lgX').onclick = closeModal;
   document.querySelectorAll('[data-lang]').forEach(b => b.onclick = () => {
     const l = b.dataset.lang; if (l === lang) { closeModal(); return; }

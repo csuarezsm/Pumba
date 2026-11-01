@@ -311,10 +311,15 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <script src="online.js"></script>
 <script>window.APP_ID = 'pumba';</script>
 <script src="i18n-en.js"></script>
+<script src="i18n-fr.js"></script>
+<script src="i18n-de.js"></script>
+<script src="i18n-it.js"></script>
 <script src="idioma.js"></script>
 <script src="masjuegos.js"></script>
 <script src="turno.js"></script>
+<script src="sonidos-cartas.js"></script>
 <script src="contador.js"></script>
+<script src="invitacion.js"></script>
 <script>
 'use strict';
 /* ================= Estado y persistencia ================= */
@@ -362,8 +367,13 @@ function openThemes() {
         <div class="pv" style="background:${t.bg}"><i style="background:${t.card}"></i><i style="background:${t.card2}"></i><b style="background:${t.gold}"></b></div>
         <div class="tn" style="color:${t.txt}">${esc(t.name)}<span style="color:${t.gold}">${k === cur ? '✓' : ''}</span></div>
       </button>`).join('')}</div>
-    <h3>🔔 Juego en línea</h3>${AvisoTurno.opcionHtml()}
+    <h3>🎵 Juego</h3>
+    <label class="f"><span>Sonidos<em>Repartir, robar, echar carta y fin de mano</em></span><input type="checkbox" class="tg" id="thSound" ${S.sound !== false ? 'checked' : ''}></label>
+    <label class="f" style="margin-bottom:10px"><span>Velocidad de la máquina<em>Cuánto tarda en jugar cada carta</em></span><span class="kinds" style="flex:none;width:50%;margin:0">${[['normal', 'Normal'], ['rapida', 'Rápida']].map(([v, l]) => `<button data-speed="${v}" class="${(S.speed || 'normal') === v ? 'on' : ''}">${l}</button>`).join('')}</span></label>
+    <h3>🔔 Avisos</h3>${AvisoTurno.opcionHtml()}
     <div class="acts"><button class="btn-gold" id="thOk">Listo</button></div>`);
+  $('#thSound').onchange = e => { S.sound = e.target.checked; save(); if (S.sound) SonidoCartas.play('carta'); };
+  document.querySelectorAll('[data-speed]').forEach(b => b.onclick = () => { S.speed = b.dataset.speed; save(); openThemes(); });
   document.querySelectorAll('[data-theme]').forEach(b => b.onclick = () => { S.theme = b.dataset.theme; applyTheme(S.theme); save(); openThemes(); });
   document.querySelectorAll('[data-cs]').forEach(b => b.onclick = () => { S.cardScale = b.dataset.cs; save(); openThemes(); });
   document.querySelectorAll('[data-fs]').forEach(b => b.onclick = () => { S.fontScale = b.dataset.fs; applyFont(); save(); openThemes(); });
@@ -371,7 +381,7 @@ function openThemes() {
   AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1231,6 +1241,7 @@ function openArchive(tab) {
 /* ---------- Partida en curso ---------- */
 function renderGame() {
   const g = S.game, R = compute(g), c = g.cfg;
+  if (g.play) { const h = g.play.hand; if (h) SonidoCartas.mesa({ mano: R.hand + (h.phase === 'over' ? 0 : 1), turnos: h.turns, fase: h.phase, mazo: h.deck.length, mesa: (h.pile || h.discard).length, fin: !!R.ended }, false); }
   if (g.play && !R.ended) return renderTable(g, R);
   clearTimeout(playTimer);
   $('#subtitle').textContent = R.ended ? 'Partida terminada' : `Mano ${R.hand + 1} · límite ${c.limit}`;

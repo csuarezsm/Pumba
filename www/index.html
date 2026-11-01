@@ -139,6 +139,8 @@ tr.hand:active td{background:var(--card2)}
 #toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:999px;font-size:calc(14px * var(--fs, 1));opacity:0;transition:opacity .25s;pointer-events:none;z-index:30}
 #toast.on{opacity:1}
 .menu button{display:block;width:100%;text-align:left;margin-bottom:8px;background:var(--card)}
+.menu .mt{font-size:calc(12px * var(--fs, 1));font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin:14px 4px 6px}.menu .mt:first-child{margin-top:4px}
+.menu .mg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}.menu .mg2 button{margin:0}
 .menu button.btn-gold{background:var(--gold);color:var(--on-gold)}
 .menu button.btn-red{background:var(--red);color:#fff}
 .donate{background:var(--card);border:1px solid var(--gold);border-radius:14px;padding:14px;margin-top:4px;text-align:center}
@@ -383,7 +385,7 @@ function openThemes() {
   AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.4.2';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1484,37 +1486,32 @@ $('#menuBtn').onclick = () => {
   const g = S.game;
   if (!g) {
     openModal(`<h3>Menú</h3><div class="menu">
+      <div class="mt">Partidas</div>
       <button id="mArch">📊 Clasificación y partidas</button>
-      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
-      <button id="mLang">🌐 Idioma · Language</button>
-      <button id="mMas">🎲 Más juegos de IT Canarias</button>
-      <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
+      <div class="mt">Ajustes y ayuda</div>
+      <div class="mg2"><button id="mTheme">🎨 Colores y tamaños</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
+      <div class="mt">La app</div>
+      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
-      <button id="mTheme">🎨 Colores y tamaños</button>
-      <button id="mAbout">ℹ️ Acerca de</button>
-      <button id="mHelp">❓ Cómo se usa</button>
-      <button id="mGameRules">📖 Reglas del Pumba</button>
-      <button id="mWipe">🗑 Borrar datos…</button>
+      <div class="mg2"><button id="mShareApp">📲 Compartir la app</button><button id="mMas">🎲 Más juegos de IT Canarias</button><button id="mAbout">ℹ️ Acerca de</button><button id="mWipe">🗑 Borrar datos…</button></div>
       <button class="btn-ghost" id="mClose">Cerrar</button></div>`);
   } else {
     openModal(`<h3>Menú</h3><div class="menu">
-      ${g.play ? '' : `<button id="mUndo" ${g.events.length ? '' : 'disabled'}>↶ Deshacer último movimiento</button>`}
+      ${(() => { const h = `${g.play ? '' : `<button id="mUndo" ${g.events.length ? '' : 'disabled'}>↶ Deshacer último movimiento</button>`}
       <button id="mRules">⚙️ Reglas de esta partida</button>
       <button id="mPlayers">✏️ Cambiar nombres</button>
       <button id="mShare">📋 Copiar resumen</button>
-      <button id="mEnd">🏁 Terminar partida</button>
+      <button id="mEnd">🏁 Terminar partida</button>`; return h.trim() ? '<div class="mt">Esta partida</div>' + h : ''; })()}
+      <div class="mt">Partidas</div>
       <button id="mArch">📊 Clasificación y partidas</button>
-      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
-      <button id="mLang">🌐 Idioma · Language</button>
-      <button id="mMas">🎲 Más juegos de IT Canarias</button>
-      <button id="mShareApp">📲 Compartir la app</button>
       <button id="mRoster">👥 Jugadores habituales</button>
+      <div class="mt">Ajustes y ayuda</div>
+      <div class="mg2"><button id="mTheme">🎨 Colores y tamaños</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
+      <div class="mt">La app</div>
+      ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
-      <button id="mTheme">🎨 Colores y tamaños</button>
-      <button id="mHelp">❓ Cómo se usa</button>
-      <button id="mGameRules">📖 Reglas del Pumba</button>
-      <button id="mAbout">ℹ️ Acerca de</button>
+      <div class="mg2"><button id="mShareApp">📲 Compartir la app</button><button id="mMas">🎲 Más juegos de IT Canarias</button><button id="mAbout">ℹ️ Acerca de</button></div>
       <button class="btn-ghost" id="mClose">Cerrar</button></div>`);
   }
   const on = (id, fn) => { const el = $('#' + id); if (el) el.onclick = fn; };

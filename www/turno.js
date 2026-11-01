@@ -17,13 +17,14 @@ const activo = () => typeof S === 'undefined' || !S || S.avisoTurno !== false;
 function campanita() {
   const c = ac(); if (!c) return false;
   const t = c.currentTime + 0.02;
-  // dos notas suaves, como un «ding-dong» corto
-  [[880, 0], [1318.5, 0.16]].forEach(([f, d]) => {
+  const out = (root.AudioSuave ? root.AudioSuave.salida(c) : c.destination);
+  // dos notas graves y suaves, como un «ding-dong» de madera (entrada lenta, sin agudos)
+  [[659.3, 0], [523.3, 0.2]].forEach(([f, d]) => {
     const o = c.createOscillator(), g = c.createGain(), o2 = c.createOscillator(), g2 = c.createGain();
     o.type = 'sine'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2;
-    g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.22, t + d + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.55);
-    g2.gain.setValueAtTime(0.0001, t + d); g2.gain.exponentialRampToValueAtTime(0.05, t + d + 0.015); g2.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.3);
-    o.connect(g); g.connect(c.destination); o2.connect(g2); g2.connect(c.destination);
+    g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.16, t + d + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.6);
+    g2.gain.setValueAtTime(0.0001, t + d); g2.gain.exponentialRampToValueAtTime(0.015, t + d + 0.03); g2.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.25);
+    o.connect(g); g.connect(out); o2.connect(g2); g2.connect(out);
     o.start(t + d); o.stop(t + d + 0.6); o2.start(t + d); o2.stop(t + d + 0.35);
   });
   return true;
@@ -34,7 +35,7 @@ function sonar() {
   if (!activo()) return false;
   const now = Date.now(); if (now - ultimo < 1500) return false; ultimo = now;
   root.AvisoTurno.veces++;
-  try { navigator.vibrate && navigator.vibrate([40, 60, 40]); } catch (e) {}
+  try { navigator.vibrate && navigator.vibrate([25, 70, 25]); } catch (e) {}
   try { campanita(); } catch (e) {}
   return true;
 }
@@ -49,8 +50,9 @@ function local(miTurno, clave) {
 // Recordatorio (por ejemplo, «pulsa Seguir»): aviso aunque haya sonado hace poco
 function recordar() { ultimo = 0; return sonar(); }
 // Opción para la ventana de ajustes
-const opcionHtml = () => `<label class="f" style="margin-bottom:10px"><span>🔔 Aviso de turno<em>Sonido y vibración cuando te toca, en línea y contra la máquina</em></span><input type="checkbox" class="tg" id="thTurno" ${activo() ? 'checked' : ''}></label>`;
+const opcionHtml = () => (root.AudioSuave ? root.AudioSuave.opcionHtml() : '') + `<label class="f" style="margin-bottom:10px"><span>🔔 Aviso de turno<em>Sonido y vibración cuando te toca, en línea y contra la máquina</em></span><input type="checkbox" class="tg" id="thTurno" ${activo() ? 'checked' : ''}></label>`;
 function enlazar() {
+  if (root.AudioSuave) root.AudioSuave.enlazar(() => campanita());
   const el = document.getElementById('thTurno'); if (!el) return;
   el.onchange = e => { S.avisoTurno = e.target.checked; save(); if (S.avisoTurno) { ultimo = 0; sonar(); } };
 }

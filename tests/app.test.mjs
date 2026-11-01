@@ -765,6 +765,9 @@ console.log('Invitación con enlace');
     const codigos = await Promise.all([P1, P2].map(x => x.p.evaluate(() => ON.sala && ON.sala.codigo)));
     check('y entra con un toque en la misma partida', mismo && codigos[0] && codigos[0] === codigos[1], JSON.stringify(codigos));
     check('sin errores en las partidas públicas', !P1.errors.length && !P2.errors.length, P1.errors.concat(P2.errors).join(' | '));
+    const vol = await P1.p.evaluate(() => { const c = new OfflineAudioContext(1, 4410, 44100); const g = AudioSuave.salida(c); const medio = g.gain.value; S.volumen = 'bajo'; const bajo = AudioSuave.salida(c).gain.value; S.volumen = undefined;
+      return { medio, bajo, opcion: AvisoTurno.opcionHtml().includes('data-volumen="alto"'), mismo: AudioSuave.salida(c) === g }; });
+    check('sonidos suaves: pasan por el volumen general (bajo, medio, alto) y se elige en los ajustes', Math.abs(vol.medio - 0.45) < 0.01 && Math.abs(vol.bajo - 0.22) < 0.01 && vol.opcion && vol.mismo, JSON.stringify(vol));
     await P1.ctx.close(); await P2.ctx.close(); PS.close();
   }
 }

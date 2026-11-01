@@ -19,25 +19,26 @@ function roce(c, t, freq, vol, dur) {
   for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
   const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
   f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = 0.8; g.gain.value = vol;
-  src.buffer = buf; src.connect(f); f.connect(g); g.connect(c.destination); src.start(t);
+  src.buffer = buf; src.connect(f); f.connect(g); g.connect((root.AudioSuave ? root.AudioSuave.salida(c) : c.destination)); src.start(t);
 }
 function tono(c, t, freq, dur, vol, type) {
   const o = c.createOscillator(), g = c.createGain();
   o.type = type || 'sine'; o.frequency.value = freq;
-  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect((root.AudioSuave ? root.AudioSuave.salida(c) : c.destination)); o.start(t); o.stop(t + dur + 0.02);
 }
 function play(kind) {
   if (!activo()) return false;
   const c = ac(); if (!c) return false;
   const t = c.currentTime + 0.01;
   try {
-    if (kind === 'carta') { roce(c, t, 2600, 0.7, 0.07); roce(c, t + 0.03, 900, 0.5, 0.05); }
-    else if (kind === 'robar') roce(c, t, 1800, 0.5, 0.12);
-    else if (kind === 'repartir') { for (let k = 0; k < 5; k++) roce(c, t + k * 0.06, 2200 + k * 80, 0.45, 0.05); }
-    else if (kind === 'mano') { [659, 523].forEach((f, i) => tono(c, t + i * 0.12, f, 0.3, 0.1, 'triangle')); }
-    else if (kind === 'fin') { [523, 659, 784, 1047].forEach((f, i) => tono(c, t + i * 0.12, f, 0.5, 0.12, 'triangle')); }
-    else if (kind === 'aviso') tono(c, t, 880, 0.18, 0.1, 'sine');
+    // suaves: roces graves y cortos, notas puras (sin armónicos chillones)
+    if (kind === 'carta') { roce(c, t, 1500, 0.4, 0.06); roce(c, t + 0.025, 650, 0.3, 0.045); }
+    else if (kind === 'robar') roce(c, t, 1100, 0.3, 0.1);
+    else if (kind === 'repartir') { for (let k = 0; k < 5; k++) roce(c, t + k * 0.065, 1400 + k * 50, 0.24, 0.045); }
+    else if (kind === 'mano') { [659, 523].forEach((f, i) => tono(c, t + i * 0.14, f, 0.35, 0.06, 'sine')); }
+    else if (kind === 'fin') { [523, 659, 784].forEach((f, i) => tono(c, t + i * 0.14, f, 0.55, 0.07, 'sine')); }
+    else if (kind === 'aviso') tono(c, t, 659, 0.2, 0.06, 'sine');
   } catch (e) { return false; }
   root.SonidoCartas.veces++;
   return true;

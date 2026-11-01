@@ -45,7 +45,8 @@ function onConectar() {
       return;
     }
     if (m.t === 'sala') { ON.listo = true; onRecibirSala(m.sala); }
-    else if (m.t === 'error') toast(m.msg);
+    else if (m.t === 'lista') Publicas.recibir(m);
+    else if (m.t === 'error') { if (!Publicas.error(m)) toast(m.msg); }
     else if (m.t === 'fuera') { toast(m.motivo || 'Has salido de la partida'); onRecibirSala(null); }
   };
   ws.onclose = () => { if (ON.ws !== ws) return; clearInterval(ON.ping); ON.ws = null; onSetEstado('desconectado'); if (ON.quiere) onReintentar(); };
@@ -119,6 +120,7 @@ function onRenderInicio() {
     <div class="sec"><h2>Tu nombre</h2>
       <input id="onName" maxlength="20" placeholder="Cómo te verán los demás" value="${esc(onNombre())}" autocomplete="off" style="width:100%">
     </div>
+    ${Publicas.html()}
     <div class="sec"><h2>Unirse a una partida</h2>
       <div class="mut" style="margin-bottom:8px">Pide el código a quien la ha creado.</div>
       <div class="row" style="gap:8px"><input id="onCode" maxlength="4" placeholder="Código" value="${esc((S.online && S.online.codigo) || '')}" autocomplete="off" autocapitalize="characters" style="flex:1;min-width:0;width:0;text-transform:uppercase;letter-spacing:4px;font-weight:700;text-align:center">
@@ -131,6 +133,7 @@ function onRenderInicio() {
       <label class="f"><span>🎨 La sota</span>${seg('sotaLibre', o.sotaLibre, [[true, 'Se echa siempre'], [false, 'Palo o número']])}</label>
       <label class="f"><span>Cerrar con un 2<em>¿El siguiente roba antes de contar?</em></span>${seg('cierreCastigo', o.cierreCastigo, [[true, 'Sí'], [false, 'No']])}</label>
       <label class="f"><span>Nivel de la máquina<em>Si rellenas sillas con la máquina</em></span>${seg('nivel', o.nivel, [['facil', 'Fácil'], ['normal', 'Normal'], ['dificil', 'Difícil']])}</label>
+      ${Publicas.casilla()}
       <button class="btn-gold" id="onCreate" style="width:100%;margin-top:8px" ${ON.estado === 'preparando' ? 'disabled' : ''}>Crear partida</button>
     </div>
     <div class="mut" style="text-align:center;margin:0 0 4px">De 2 a 6 jugadores; las sillas libres las puede ocupar la máquina.</div>
@@ -148,13 +151,14 @@ function onRenderInicio() {
     const c = $('#onCode').value.trim().toUpperCase(); if (c.length !== 4) { toast('El código tiene 4 letras o números'); return; }
     onEnviar({ t: 'unirse', codigo: c, nombre: n });
   };
+  const leerOpciones = () => { const opciones = { limite: Math.max(50, Math.min(500, parseInt($('#onLim').value, 10) || 100)), reenganches: +val('reenganches'), figuras: val('figuras'),
+      sotaLibre: val('sotaLibre') === 'true', cierreCastigo: val('cierreCastigo') === 'true', nivel: val('nivel') }; S.online.opciones = opciones; save(); return opciones; };
   $('#onCreate').onclick = () => {
     const n = nameOk(); if (!n) return;
-    const opciones = { limite: Math.max(50, Math.min(500, parseInt($('#onLim').value, 10) || 100)), reenganches: +val('reenganches'), figuras: val('figuras'),
-      sotaLibre: val('sotaLibre') === 'true', cierreCastigo: val('cierreCastigo') === 'true', nivel: val('nivel') };
-    S.online.opciones = opciones; save();
-    onEnviar({ t: 'crear', juego: 'pumba', opciones, nombre: n });
+    const opciones = leerOpciones();
+    onEnviar({ t: 'crear', juego: 'pumba', opciones, publica: Publicas.marcada(), nombre: n });
   };
+  Publicas.montar({ juego: 'pumba', enviar: onEnviar, nombre: nameOk, opciones: leerOpciones, conectado: () => ON.estado === 'conectado' });
 }
 
 function onRenderEspera(s) {
@@ -165,6 +169,7 @@ function onRenderEspera(s) {
       <div class="on-code" id="onCodeBig">${esc(s.codigo)}</div>
       <button class="btn-gold" id="onInvite" style="width:100%">📲 Enviar el código (WhatsApp…)</button>
       <div class="mut" style="margin-top:8px">Los demás abren Pumba → <b>En línea</b> → <b>Unirse</b> y ponen el código.</div></div>
+    ${Publicas.aviso(s)}
     <div class="sec"><h2>Jugadores (${s.asientos.length}/${s.max})</h2>
       ${s.asientos.map(a => `<div class="on-seat"><span class="on-dot ${a.conectado ? 'ok' : ''}"></span><span class="n">${esc(a.nombre)}${a.id === s.yo ? ' <small>(tú)</small>' : ''}${a.anfitrion ? ' 👑' : ''}</span>
         ${s.anfitrion && a.id !== s.yo ? `<button class="btn-ghost sm" data-quitar="${a.id}" aria-label="Quitar">✕</button>` : ''}</div>`).join('')}

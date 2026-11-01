@@ -732,6 +732,43 @@ console.log('Invitación con enlace');
   await ctx.close();
 }
 
+// Partidas públicas y «Jugar con cualquiera», contra el servidor común de juegos
+{
+  console.log('Partidas públicas');
+  const { createRequire: cr } = await import('node:module');
+  const fsp = await import('node:fs'), osp = await import('node:os');
+  const SERV = process.env.JUEGOS_SERVIDOR || fileURLToPath(new URL('../../juegos-servidor/', import.meta.url));
+  if (!fsp.existsSync(join(SERV, 'src/server.js'))) check('servidor común de juegos para las pruebas', false, 'no está en ' + SERV);
+  else {
+    if (!process.env.DATA_DIR) process.env.DATA_DIR = fsp.mkdtempSync(join(osp.tmpdir(), 'juegos-'));
+    const { crearServidor } = cr(join(SERV, 'package.json'))('./src/server.js');
+    const { server: PS } = crearServidor();
+    await new Promise(r => PS.listen(0, '127.0.0.1', r));
+    const PWS = `ws://127.0.0.1:${PS.address().port}/ws`;
+    const abrirP = async () => {
+      const ctx = await browser.newContext({ viewport: { width: 412, height: 860 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });
+      await ctx.addInitScript(u => { window.ONLINE_URL = u; if (!localStorage.getItem('pumba.v1')) localStorage.setItem('pumba.v1', JSON.stringify({ onboarded: true })); }, PWS);
+      const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message));
+      await p.goto(URL_APP); await p.click('[data-mode="online"]'); return { p, ctx, errors };
+    };
+    const P1 = await abrirP(), P2 = await abrirP();
+    await P1.p.waitForSelector('#pubBuscar', { timeout: 8000 }).catch(() => {});
+    check('en línea aparecen «Jugar con cualquiera», las partidas abiertas y la casilla de partida pública', !!(await P1.p.$('#pubBuscar')) && !!(await P1.p.$('#pubLista')) && !!(await P1.p.$('#pubPublica')));
+    await P1.p.fill('#onName', 'Carlos'); await P1.p.click('#pubBuscar');
+    check('al buscar, espera en una mesa de «cualquiera»', await P1.p.waitForFunction(() => ON.sala && ON.sala.auto && ON.sala.publica, null, { timeout: 8000 }).then(() => true, () => false));
+    check('y lo dice en pantalla', await P1.p.waitForSelector('text=Buscando jugadores', { timeout: 5000 }).then(() => true, () => false));
+    await P2.p.fill('#onName', 'Mari');
+    const fila = await P2.p.waitForSelector('[data-pubentrar]', { timeout: 12000 }).catch(() => null);
+    check('otro móvil la ve en «Partidas abiertas»', !!fila && (await P2.p.textContent('#pubLista')).includes('Carlos'));
+    if (fila) await fila.click();
+    const mismo = await P2.p.waitForFunction(() => !!ON.sala, null, { timeout: 8000 }).then(() => true, () => false);
+    const codigos = await Promise.all([P1, P2].map(x => x.p.evaluate(() => ON.sala && ON.sala.codigo)));
+    check('y entra con un toque en la misma partida', mismo && codigos[0] && codigos[0] === codigos[1], JSON.stringify(codigos));
+    check('sin errores en las partidas públicas', !P1.errors.length && !P2.errors.length, P1.errors.concat(P2.errors).join(' | '));
+    await P1.ctx.close(); await P2.ctx.close(); PS.close();
+  }
+}
+
 await browser.close(); server.close();
 console.log(`\n${passed} correctas, ${failed} fallidas`);
 process.exit(failed ? 1 : 0);

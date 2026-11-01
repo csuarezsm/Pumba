@@ -77,7 +77,7 @@ function onRecibirSala(sala) {
     const p = sala.partida;
     const miTurno = sala.estado === 'jugando' && p.turno === sala.yo && p.fase === 'play';
     const clave = p.mano + '|' + p.turnos;
-    if (miTurno && ON.ultimoTurno !== clave) { ON.ultimoTurno = clave; vibrate(30); }
+    if (miTurno && ON.ultimoTurno !== clave) { ON.ultimoTurno = clave; AvisoTurno.sonar(); }   // sonido y vibración (se quita en ajustes)
     if (!miTurno || (ON.sel && !(p.jugables || []).includes(ON.sel))) ON.sel = null;
     if (!miTurno || !p.miMano || p.miMano.length !== 2) ON.say = false;
     if (p.olvido && p.olvido !== sala.yo && p.miMano && (!antes || !antes.partida || antes.partida.olvido !== p.olvido)) vibrate([20, 40, 20]);

@@ -41,6 +41,10 @@ label.f{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 label.f:first-of-type{border-top:0}
 label.f span{flex:1;min-width:0}
 label.f select{max-width:58%}
+input.tg{appearance:none;-webkit-appearance:none;width:52px;height:30px;border-radius:999px;background:var(--bg);border:1px solid var(--line);position:relative;flex:none;padding:0;cursor:pointer;transition:background .15s}
+input.tg::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--mut);transition:transform .15s,background .15s}
+input.tg:checked{background:var(--gold);border-color:var(--gold)}
+input.tg:checked::after{transform:translateX(22px);background:var(--on-gold)}
 label.f em{display:block;font-style:normal;font-size:calc(12px * var(--fs, 1));color:var(--mut)}
 input,select{font:inherit;color:var(--txt);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 input[type=number]{width:90px;text-align:center}
@@ -307,6 +311,7 @@ body:has(.pt-table){padding-bottom:env(safe-area-inset-bottom)}
 <script src="online.js"></script>
 <script>window.APP_ID = 'pumba';</script>
 <script src="masjuegos.js"></script>
+<script src="turno.js"></script>
 <script>
 'use strict';
 /* ================= Estado y persistencia ================= */
@@ -354,14 +359,16 @@ function openThemes() {
         <div class="pv" style="background:${t.bg}"><i style="background:${t.card}"></i><i style="background:${t.card2}"></i><b style="background:${t.gold}"></b></div>
         <div class="tn" style="color:${t.txt}">${esc(t.name)}<span style="color:${t.gold}">${k === cur ? '✓' : ''}</span></div>
       </button>`).join('')}</div>
+    <h3>🔔 Juego en línea</h3>${AvisoTurno.opcionHtml()}
     <div class="acts"><button class="btn-gold" id="thOk">Listo</button></div>`);
   document.querySelectorAll('[data-theme]').forEach(b => b.onclick = () => { S.theme = b.dataset.theme; applyTheme(S.theme); save(); openThemes(); });
   document.querySelectorAll('[data-cs]').forEach(b => b.onclick = () => { S.cardScale = b.dataset.cs; save(); openThemes(); });
   document.querySelectorAll('[data-fs]').forEach(b => b.onclick = () => { S.fontScale = b.dataset.fs; applyFont(); save(); openThemes(); });
   $('#thOk').onclick = closeModal;
+  AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.1.2';
+const APP_VERSION = '1.1.3';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores

@@ -1324,3 +1324,4 @@ Object.assign(window.I18N.en, {"Partidas públicas": "Public games", "Jugar con 
 Object.assign(window.I18N.en, {"🛠 Las partidas públicas estarán disponibles muy pronto.":"🛠 Public games will be available very soon."});
 Object.assign(window.I18N.en, {"🔉 Volumen": "🔉 Volume", "De los sonidos y del aviso de turno": "For sounds and the turn alert", "Bajo": "Low", "Medio": "Medium", "Alto": "High"});
 Object.assign(window.I18N.en, {"Esta partida": "This game", "Ajustes y ayuda": "Settings and help", "La app": "The app"});
+Object.assign(window.I18N.en, {"🎨 Colores, letra y sonido": "🎨 Colours, text and sound"});

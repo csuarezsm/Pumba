@@ -9,3 +9,4 @@ Object.assign(window.I18N.fr, {"Partidas públicas": "Parties publiques", "Jugar
 Object.assign(window.I18N.fr, {"🛠 Las partidas públicas estarán disponibles muy pronto.":"🛠 Les parties publiques seront disponibles très bientôt."});
 Object.assign(window.I18N.fr, {"🔉 Volumen": "🔉 Volume", "De los sonidos y del aviso de turno": "Des sons et de l'alerte de tour", "Bajo": "Bas", "Medio": "Moyen", "Alto": "Fort"});
 Object.assign(window.I18N.fr, {"Esta partida": "Cette partie", "Ajustes y ayuda": "Réglages et aide", "La app": "L'appli"});
+Object.assign(window.I18N.fr, {"🎨 Colores, letra y sonido": "🎨 Couleurs, texte et son"});

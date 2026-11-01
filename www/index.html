@@ -385,7 +385,7 @@ function openThemes() {
   AvisoTurno.enlazar();
 }
 
-const APP_VERSION = '1.4.2';
+const APP_VERSION = '1.4.3';
 const REPO = 'csuarezsm/Pumba';
 const MAX_ARCHIVE = 500;
 const MAX_PLAYERS = 6;          // de 2 a 6 jugadores
@@ -1490,7 +1490,7 @@ $('#menuBtn').onclick = () => {
       <button id="mArch">📊 Clasificación y partidas</button>
       <button id="mRoster">👥 Jugadores habituales</button>
       <div class="mt">Ajustes y ayuda</div>
-      <div class="mg2"><button id="mTheme">🎨 Colores y tamaños</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
+      <div class="mg2"><button id="mTheme">🎨 Colores, letra y sonido</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
       <div class="mt">La app</div>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}
@@ -1507,7 +1507,7 @@ $('#menuBtn').onclick = () => {
       <button id="mArch">📊 Clasificación y partidas</button>
       <button id="mRoster">👥 Jugadores habituales</button>
       <div class="mt">Ajustes y ayuda</div>
-      <div class="mg2"><button id="mTheme">🎨 Colores y tamaños</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
+      <div class="mg2"><button id="mTheme">🎨 Colores, letra y sonido</button><button id="mLang">🌐 Idioma · Language</button><button id="mHelp">❓ Cómo se usa</button><button id="mGameRules">📖 Reglas del Pumba</button></div>
       <div class="mt">La app</div>
       ${isIOS() && !isStandalone() && !isNative() ? '<button id="mIOS" class="btn-gold">📲 Instalar en el iPhone</button>' : ''}
       ${isPlay() || !isNative() ? '' : hasUpd() ? `<button id="mUpd" class="btn-gold">🎉 Actualizar a v${esc(S.updAvail.v)} (nueva)</button>` : '<button id="mUpd">🔄 Buscar actualizaciones</button>'}

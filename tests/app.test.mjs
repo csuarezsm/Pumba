@@ -716,6 +716,8 @@ console.log('Sonidos y velocidad de la máquina');
 }
 
 console.log('Invitación con enlace');
+{ const pk = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')); const man = await readFile(new URL('../android/app/src/main/AndroidManifest.xml', import.meta.url), 'utf8');
+  check('la app Android recibe el enlace (complemento @capacitor/app)', !!pk.dependencies['@capacitor/app'] && /android:host="unirse"/.test(man)); }
 {
   const { p, ctx, errors } = await fresh();
   await p.waitForTimeout(300);

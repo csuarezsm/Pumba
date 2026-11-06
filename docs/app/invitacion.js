@@ -7,7 +7,7 @@
    Cada app define window.unirseDesdeEnlace(codigo), que lleva a la pantalla de «En línea» y entra en la sala. */
 (function (root) {
 'use strict';
-const REPOS = { ajedrez: 'Ajedrez', damas: 'Damas', chinchon: 'chinchon-marcador', pumba: 'Pumba', parchis: 'Parchis', poker: 'Poker', uno: 'Uno' };
+const REPOS = { ajedrez: 'Ajedrez', damas: 'Damas', chinchon: 'chinchon-marcador', pumba: 'Pumba', parchis: 'Parchis', poker: 'Poker', uno: 'Uno', invasores: 'Invasores' };
 const id = () => root.APP_ID || '';
 const limpio = c => { const s = String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); return s.length === 4 ? s : null; };
 // Enlace para el mensaje de invitación

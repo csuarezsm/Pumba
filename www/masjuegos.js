@@ -1,5 +1,5 @@
 /* Más juegos de IT Canarias — enlaces entre las apps. © 2026 IT Canarias. Todos los derechos reservados.
-   El mismo archivo en todas las apps (Ajedrez, Chinchón, Pumba, Damas, Parchís, Póker…). Cada app pone window.APP_ID.
+   El mismo archivo en todas las apps (Ajedrez, Chinchón, Pumba, Damas, Parchís, Póker, UNO, Invasores…). Cada app pone window.APP_ID.
    - Lleva dentro una lista de los juegos, para que funcione sin conexión.
    - Con internet, descarga el catálogo común (juegos-servidor/docs/juegos.json en GitHub Pages) como mucho
      cada 12 horas y lo guarda en el móvil: un juego nuevo aparece en todas las apps sin actualizarlas.
@@ -17,6 +17,7 @@ const BASE = [
   { id: 'parchis', nombre: 'Parchís', emoji: '🎲', descripcion: 'El parchís de siempre, de 2 a 4: contra la máquina, con amigos en el mismo móvil o en línea.', android: 'com.itcanarias.parchis', descarga: 'https://csuarezsm.github.io/Parchis/', web: 'https://csuarezsm.github.io/Parchis/app/', icono: 'https://csuarezsm.github.io/Parchis/icon.png' },
   { id: 'poker', nombre: 'Póker', emoji: '♠️', descripcion: "Texas Hold'em: torneo con fichas ficticias contra la máquina o en línea, con modo aprendizaje.", android: 'com.itcanarias.poker', descarga: 'https://csuarezsm.github.io/Poker/', web: 'https://csuarezsm.github.io/Poker/app/', icono: 'https://csuarezsm.github.io/Poker/icon.png' },
   { id: 'uno', nombre: 'UNO', emoji: '🃏', descripcion: 'Cartas de colores contra la máquina o en línea con amigos, con modo aprendizaje.', android: 'com.itcanarias.uno', descarga: 'https://csuarezsm.github.io/Uno/', web: 'https://csuarezsm.github.io/Uno/app/', icono: 'https://csuarezsm.github.io/Uno/icon.png' },
+  { id: 'invasores', nombre: 'Invasores espaciales', emoji: '👾', descripcion: 'Arcade retro: defiende la Tierra de los invasores o compite en línea con tus amigos por la mejor puntuación.', android: 'com.itcanarias.invasores', descarga: 'https://csuarezsm.github.io/Invasores/', web: 'https://csuarezsm.github.io/Invasores/app/', icono: 'https://csuarezsm.github.io/Invasores/icon.png' }
 ];
 // Iconos que lleva la app dentro (www/juegos/<id>.png)
 const LOCALES = new Set(BASE.map(j => j.id));

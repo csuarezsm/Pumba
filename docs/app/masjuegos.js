@@ -1,5 +1,5 @@
 /* Más juegos de IT Canarias — enlaces entre las apps. © 2026 IT Canarias. Todos los derechos reservados.
-   El mismo archivo en todas las apps (Ajedrez, Chinchón, Pumba, Damas, Parchís…). Cada app pone window.APP_ID.
+   El mismo archivo en todas las apps (Ajedrez, Chinchón, Pumba, Damas, Parchís, Póker…). Cada app pone window.APP_ID.
    - Lleva dentro una lista de los juegos, para que funcione sin conexión.
    - Con internet, descarga el catálogo común (juegos-servidor/docs/juegos.json en GitHub Pages) como mucho
      cada 12 horas y lo guarda en el móvil: un juego nuevo aparece en todas las apps sin actualizarlas.
@@ -15,6 +15,7 @@ const BASE = [
   { id: 'chinchon', nombre: 'Chinchón', emoji: '🃏', descripcion: 'Marcador de puntos del chinchón y partidas contra la máquina o en línea.', android: 'com.itcanarias.chinchon', descarga: 'https://csuarezsm.github.io/chinchon-marcador/', web: 'https://csuarezsm.github.io/chinchon-marcador/app/', icono: 'https://csuarezsm.github.io/chinchon-marcador/icon.png' },
   { id: 'pumba', nombre: 'Pumba', emoji: '🎴', descripcion: 'El juego de cartas Pumba contra la máquina o en línea, y los puntos de vuestras partidas.', android: 'com.itcanarias.pumba', descarga: 'https://csuarezsm.github.io/Pumba/', web: 'https://csuarezsm.github.io/Pumba/app/', icono: 'https://csuarezsm.github.io/Pumba/icon.png' },
   { id: 'parchis', nombre: 'Parchís', emoji: '🎲', descripcion: 'El parchís de siempre, de 2 a 4: contra la máquina, con amigos en el mismo móvil o en línea.', android: 'com.itcanarias.parchis', descarga: 'https://csuarezsm.github.io/Parchis/', web: 'https://csuarezsm.github.io/Parchis/app/', icono: 'https://csuarezsm.github.io/Parchis/icon.png' },
+  { id: 'poker', nombre: 'Póker', emoji: '♠️', descripcion: "Texas Hold'em: torneo con fichas ficticias contra la máquina o en línea, con modo aprendizaje.", android: 'com.itcanarias.poker', descarga: 'https://csuarezsm.github.io/Poker/', web: 'https://csuarezsm.github.io/Poker/app/', icono: 'https://csuarezsm.github.io/Poker/icon.png' },
 ];
 // Iconos que lleva la app dentro (www/juegos/<id>.png)
 const LOCALES = new Set(BASE.map(j => j.id));

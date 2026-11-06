@@ -44,6 +44,7 @@
         <package android:name="com.itcanarias.chinchon" />
         <package android:name="com.itcanarias.pumba" />
         <package android:name="com.itcanarias.parchis" />
+        <package android:name="com.itcanarias.poker" />
     </queries>
 
     <!-- Permissions -->

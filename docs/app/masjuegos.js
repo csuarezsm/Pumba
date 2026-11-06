@@ -16,6 +16,7 @@ const BASE = [
   { id: 'pumba', nombre: 'Pumba', emoji: '🎴', descripcion: 'El juego de cartas Pumba contra la máquina o en línea, y los puntos de vuestras partidas.', android: 'com.itcanarias.pumba', descarga: 'https://csuarezsm.github.io/Pumba/', web: 'https://csuarezsm.github.io/Pumba/app/', icono: 'https://csuarezsm.github.io/Pumba/icon.png' },
   { id: 'parchis', nombre: 'Parchís', emoji: '🎲', descripcion: 'El parchís de siempre, de 2 a 4: contra la máquina, con amigos en el mismo móvil o en línea.', android: 'com.itcanarias.parchis', descarga: 'https://csuarezsm.github.io/Parchis/', web: 'https://csuarezsm.github.io/Parchis/app/', icono: 'https://csuarezsm.github.io/Parchis/icon.png' },
   { id: 'poker', nombre: 'Póker', emoji: '♠️', descripcion: "Texas Hold'em: torneo con fichas ficticias contra la máquina o en línea, con modo aprendizaje.", android: 'com.itcanarias.poker', descarga: 'https://csuarezsm.github.io/Poker/', web: 'https://csuarezsm.github.io/Poker/app/', icono: 'https://csuarezsm.github.io/Poker/icon.png' },
+  { id: 'uno', nombre: 'UNO', emoji: '🃏', descripcion: 'Cartas de colores contra la máquina o en línea con amigos, con modo aprendizaje.', android: 'com.itcanarias.uno', descarga: 'https://csuarezsm.github.io/Uno/', web: 'https://csuarezsm.github.io/Uno/app/', icono: 'https://csuarezsm.github.io/Uno/icon.png' },
 ];
 // Iconos que lleva la app dentro (www/juegos/<id>.png)
 const LOCALES = new Set(BASE.map(j => j.id));

@@ -643,7 +643,7 @@ console.log('Más juegos de IT Canarias');
   check('el menú tiene «Más juegos de IT Canarias»', !!(await p.$('#mMas')));
   await p.click('#mMas'); await p.waitForTimeout(200);
   const base = await p.evaluate(() => [...document.querySelectorAll('.mjc b')].map(b => b.textContent));
-  check('sin conexión: los otros siete juegos, y no este', base.length === 7 && !base.some(n => n.toLowerCase().startsWith('pumba')), base.join());
+  check('sin conexión: los otros ocho juegos, y no este', base.length === 8 && !base.some(n => n.toLowerCase().startsWith('pumba')), base.join());
   check('con sus iconos dentro de la app', await p.evaluate(() => [...document.querySelectorAll('.mji img')].every(i => i.getAttribute('src').startsWith('juegos/'))));
   check('el catálogo común se descarga y se guarda', await p.evaluate(async () => await MasJuegos.actualizar(true) && S.masJuegos.juegos.length === 5));
   await p.evaluate(() => { closeModal(); MasJuegos.abrir(); }); await p.waitForTimeout(200);

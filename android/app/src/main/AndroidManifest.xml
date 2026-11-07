@@ -47,6 +47,7 @@
         <package android:name="com.itcanarias.poker" />
         <package android:name="com.itcanarias.uno" />
         <package android:name="com.itcanarias.invasores" />
+        <package android:name="com.itcanarias.martin" />
     </queries>
 
     <!-- Permissions -->

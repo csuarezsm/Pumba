@@ -32,7 +32,7 @@ function cargar(d) {
       const letras = kk.replace(/\{\d+\}/g, '').replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑüÜ]/g, '');
       if (letras.length < 4) continue;                          // demasiado genérico para usarlo como plantilla
       const nums = []; const re = '^' + escRe(kk).replace(/\\?\{(\d+)\\?\}/g, (_, n) => { nums.push(n); return '(.*?)'; }) + '$';
-      try { PATRONES.push([new RegExp(re), t, nums]); } catch (e) {}
+      try { const i = PATRONES.findIndex(p => p[4] === kk); const p = [new RegExp(re), t, nums, /\. /.test(kk), kk]; if (i >= 0) PATRONES[i] = p; else PATRONES.push(p); } catch (e) {}   // la versión de la app manda sobre la común
     } else MAPA.set(kk, t);
   }
 }
@@ -56,19 +56,20 @@ function trSin(s, d) {
   if (MAPA.has(s)) return MAPA.get(s);
   if (!/[A-Za-zÁÉÍÓÚáéíóúñÑ]/.test(s)) return null;
   const c = carta(s); if (c) return c;
-  for (const [re, t, nums] of PATRONES) {
+  for (const [re, t, nums, frases] of PATRONES) {
     const m = re.exec(s);
+    if (m && !frases && m.slice(1).some(g => g && g.includes('. '))) continue;   // una plantilla de una frase no se traga la siguiente
     if (m) return t.replace(/\{(\d+)\}/g, (_, n) => { const i = nums.indexOf(n); const g = i >= 0 ? m[i + 1] : ''; return g ? otra(g, d) : ''; });
   }
+  // un símbolo delante (📖, 🏆, •…): se traduce el resto
+  { const w0 = s.split(' '); if (w0.length > 1 && !/[A-Za-zÁÉÍÓÚáéíóúñÑ0-9]/.test(w0[0])) { const t = trSin(w0.slice(1).join(' '), d + 1); if (t != null) return w0[0] + ' ' + t; } }
   // por trozos: «A · B», «A: B», «A — B»
-  for (const sep of [' · ', ' — ', ' – ', ': ', ' | ', ' / ']) {
+  for (const sep of [' · ', ' — ', ' – ', ': ', ' | ', ' / ', '. ', ', ']) {   // también frases encadenadas («A juega X. B roba 2») y listas
     if (!s.includes(sep)) continue;
     const ps = s.split(sep), ts = ps.map(p => { const t = trSin(norm(p), d + 1); return t == null ? p : t; });
     if (ts.some((t, i) => t !== ps[i])) return ts.join(sep);
   }
   const w = s.split(' ');
-  // un símbolo delante (📖, 🏆…): se traduce el resto
-  if (w.length > 1 && !/[A-Za-zÁÉÍÓÚáéíóúñÑ0-9]/.test(w[0])) { const t = trSin(w.slice(1).join(' '), d + 1); if (t != null) return w[0] + ' ' + t; }
   // el principio es un texto conocido («😔 Gana Carlos», «Juegan blancas»…)
   for (let i = w.length - 1; i >= 1; i--) {
     const a = w.slice(0, i).join(' ');

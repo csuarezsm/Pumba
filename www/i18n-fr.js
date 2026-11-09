@@ -2042,7 +2042,8 @@ window.I18N["fr"] = Object.assign(window.I18N["fr"] || {}, {
 "👾 Invasores espaciales — el arcade retro de siempre, con reto en línea para jugar con tus amigos. Gratis y sin anuncios.": "👾 Envahisseurs de l'espace — l'arcade rétro de toujours, avec un défi en ligne pour jouer avec vos amis. Gratuit et sans publicité.",
 "📖 Reglas del juego": "📖 Règles du jeu",
 "récord": "record",
-"GitHub no responde ahora mismo (HTTP {1}). Prueba de nuevo en unos minutos.": "GitHub ne répond pas pour le moment (HTTP {1}). Réessayez dans quelques minutes."
+"GitHub no responde ahora mismo (HTTP {1}). Prueba de nuevo en unos minutos.": "GitHub ne répond pas pour le moment (HTTP {1}). Réessayez dans quelques minutes.",
+"Lleva el agua por los caminos de Lanzarote: 11 niveles en dos mundos y un desafío diario con clasificación.": "Porte l'eau sur les chemins de Lanzarote : 11 niveaux dans deux mondes et un défi quotidien avec classement."
 });
 window.I18N["fr:uno"] = Object.assign(window.I18N["fr:uno"] || {}, {
 "Pasar": "Passer",

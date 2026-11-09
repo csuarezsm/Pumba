@@ -2042,7 +2042,8 @@ window.I18N["en"] = Object.assign(window.I18N["en"] || {}, {
 "👾 Invasores espaciales — el arcade retro de siempre, con reto en línea para jugar con tus amigos. Gratis y sin anuncios.": "👾 Space Invaders — the classic retro arcade, with an online challenge to play with your friends. Free, no ads.",
 "📖 Reglas del juego": "📖 Game rules",
 "récord": "record",
-"GitHub no responde ahora mismo (HTTP {1}). Prueba de nuevo en unos minutos.": "GitHub isn't responding right now (HTTP {1}). Try again in a few minutes."
+"GitHub no responde ahora mismo (HTTP {1}). Prueba de nuevo en unos minutos.": "GitHub isn't responding right now (HTTP {1}). Try again in a few minutes.",
+"Lleva el agua por los caminos de Lanzarote: 11 niveles en dos mundos y un desafío diario con clasificación.": "Carry the water along the paths of Lanzarote: 11 levels in two worlds and a daily challenge with a leaderboard."
 });
 window.I18N["en:damas"] = Object.assign(window.I18N["en:damas"] || {}, {
 "Dama": "King",

@@ -2845,7 +2845,19 @@ window.I18N["it:martin"] = Object.assign(window.I18N["it:martin"] || {}, {
 "Ministerio de Agricultura: libro genealógico de la raza Camello Canario": "Ministero dell'Agricoltura spagnolo: libro genealogico della razza Cammello canario",
 "Un pequeño crustáceo de color rojo que vive en las salinas.": "Un piccolo crostaceo rosso che vive nelle saline.",
 "Junto con un alga, Dunaliella salina, da a las salinas de Janubio su color rojizo.": "Insieme a un'alga, Dunaliella salina, dà alle saline di Janubio il loro colore rossastro.",
-"Banco de Datos de Biodiversidad de Canarias: pita": "Banca dati della biodiversità delle Canarie: agave"
+"Banco de Datos de Biodiversidad de Canarias: pita": "Banca dati della biodiversità delle Canarie: agave",
+"Parra (vid)": "Vite (parra)",
+"En Lanzarote se cultiva de dos formas tradicionales: en hoyos y en zanjas. Los hoyos se excavan en forma de cono en el picón para que la parra llegue a la tierra de debajo; las zanjas tienen muros que las separan.": "A Lanzarote si coltiva in due modi tradizionali: in buche e in trincee. Le buche si scavano a cono nel picón perché la vite arrivi alla terra sottostante; le trincee sono separate da muretti.",
+"Para protegerla del viento se levantan zocos, pequeños muros de piedra en media luna. Sus vinos más destacados son los blancos de malvasía, y la vendimia se hace en julio, antes que en ningún otro lugar de Europa.": "Per proteggerla dal vento si alzano gli zocos, muretti di pietra a mezzaluna. I suoi vini più noti sono i bianchi di malvasia, e la vendemmia si fa a luglio, prima che in qualsiasi altro luogo d'Europa.",
+"Turespaña: viñedos de La Geria": "Turespaña: vigneti di La Geria",
+"FAO: sistemas agrícolas de Lanzarote (Patrimonio Agrícola Mundial)": "FAO: sistemi agricoli di Lanzarote (patrimonio agricolo mondiale)",
+"Ministerio de Agricultura: los enarenados de Lanzarote": "Ministero dell'Agricoltura spagnolo: gli enarenados di Lanzarote",
+"Papeles de Geografía (Universidad de Murcia): el viñedo de La Geria": "Papeles de Geografía (Università di Murcia): il vigneto di La Geria",
+"Las erupciones de Timanfaya, entre 1730 y 1736, cubrieron estas tierras con una gruesa capa de ceniza volcánica: el picón.": "Le eruzioni di Timanfaya, tra il 1730 e il 1736, coprirono queste terre con uno spesso strato di cenere vulcanica: il picón.",
+"Para plantar las parras se excava la capa de picón, de unos dos metros y medio, hasta llegar a la tierra que quedó enterrada. El hoyo suele protegerse del viento con un pequeño muro de piedra.": "Per piantare le viti si scava lo strato di picón, di circa due metri e mezzo, fino alla terra rimasta sepolta. La buca di solito si protegge dal vento con un muretto di pietra.",
+"La tierra volcánica absorbe y conserva la humedad en una isla donde casi no llueve. La variedad de uva más abundante es la malvasía. Fue declarada Parque Natural en 1987 y hoy es Paisaje Protegido, con 5.255 hectáreas.": "La terra vulcanica assorbe e conserva l'umidità in un'isola dove quasi non piove. Il vitigno più diffuso è la malvasia. Fu dichiarata Parco Naturale nel 1987 e oggi è Paesaggio Protetto, con 5.255 ettari.",
+"Cada hoyo mide unos 3 metros de diámetro, y en una hectárea caben hasta 350, según lo profundos que sean.": "Ogni buca misura circa 3 metri di diametro, e in un ettaro ne stanno fino a 350, a seconda della profondità.",
+"En plena Geria está el Volcán del Cuervo, el primero de las erupciones de Timanfaya. Hoy se puede entrar a pie en su cráter por un sendero señalizado de alrededor de una hora.": "Nel cuore di La Geria si trova il Volcán del Cuervo, il primo delle eruzioni di Timanfaya. Oggi si può entrare a piedi nel suo cratere con un sentiero segnalato di circa un'ora."
 });
 window.I18N["it:poker"] = Object.assign(window.I18N["it:poker"] || {}, {
 "Carta alta": "Carta alta",

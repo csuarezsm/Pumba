@@ -2678,7 +2678,16 @@ window.I18N["it:martin"] = Object.assign(window.I18N["it:martin"] || {}, {
 "Desde allí se ven La Graciosa y los islotes del Archipiélago Chinijo, que con el risco forman un parque natural, y abajo, al pie del risco, las Salinas del Río.": "Da lì si vedono La Graciosa e gli isolotti dell'Arcipelago Chinijo, che con la scogliera formano un parco naturale, e in basso, ai piedi della scogliera, le Salinas del Río.",
 "CACT Lanzarote (Cabildo): Mirador del Río": "CACT Lanzarote (Cabildo): Mirador del Río",
 "Turismo Lanzarote: César Manrique, 100 años": "Turismo Lanzarote: César Manrique, 100 anni",
-"Gobierno de Canarias: El Mirador del Río": "Governo delle Canarie: il Mirador del Río"
+"Gobierno de Canarias: El Mirador del Río": "Governo delle Canarie: il Mirador del Río",
+"🧶 Collar de borlas": "🧶 Collana di nappe",
+"🌺 Corona de buganvillas": "🌺 Corona di buganvillee",
+"🎁 ¡Nuevo adorno para Martín!": "🎁 Nuovo ornamento per Martín!",
+"Ya lo lleva puesto. Puedes cambiarlo en Aspecto y sonido.": "Lo indossa già. Puoi cambiarlo in Aspetto e suono.",
+"🐪 Adornos de Martín": "🐪 Ornamenti di Martín",
+"Recoge todos los frutos de un mundo y Martín gana un adorno.": "Raccogli tutti i frutti di un mondo e Martín vince un ornamento.",
+"Sin adorno": "Nessun ornamento",
+"🔒 Mundo 1": "🔒 Mondo 1",
+"🔒 Mundo 2": "🔒 Mondo 2"
 });
 window.I18N["it:poker"] = Object.assign(window.I18N["it:poker"] || {}, {
 "Carta alta": "Carta alta",

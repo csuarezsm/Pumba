@@ -79,26 +79,44 @@ public class AppUpdaterPlugin extends Plugin {
                 File out = new File(dir, "pumba-update.apk");
                 if (out.exists() && !out.delete()) throw new IOException("No se pudo borrar la descarga anterior");
 
-                // GitHub redirige la descarga a otro servidor: seguimos las redirecciones (solo https)
-                URL url = new URL(startUrl);
+                // GitHub redirige la descarga a otro servidor: seguimos las redirecciones (solo https).
+                // Si ese servidor falla un momento (502/503/504, 429 o un corte de red), se reintenta solo hasta 4 veces.
                 int code = 0;
-                for (int hops = 0; hops < 6; hops++) {
-                    c = (HttpURLConnection) url.openConnection();
-                    c.setInstanceFollowRedirects(false);
-                    c.setConnectTimeout(15000);
-                    c.setReadTimeout(30000);
-                    code = c.getResponseCode();
-                    if (code >= 300 && code < 400) {
-                        String loc = c.getHeaderField("Location");
-                        c.disconnect();
-                        if (loc == null) throw new IOException("Redirección sin destino");
-                        url = new URL(url, loc);
-                        if (!"https".equals(url.getProtocol())) throw new IOException("Descarga no segura");
-                        continue;
+                for (int intento = 0; ; intento++) {
+                    try {
+                        URL url = new URL(startUrl);
+                        code = 0;
+                        for (int hops = 0; hops < 6; hops++) {
+                            c = (HttpURLConnection) url.openConnection();
+                            c.setInstanceFollowRedirects(false);
+                            c.setConnectTimeout(15000);
+                            c.setReadTimeout(30000);
+                            code = c.getResponseCode();
+                            if (code >= 300 && code < 400) {
+                                String loc = c.getHeaderField("Location");
+                                c.disconnect();
+                                c = null;
+                                if (loc == null) throw new IOException("Redirección sin destino");
+                                url = new URL(url, loc);
+                                if (!"https".equals(url.getProtocol())) throw new SecurityException("Descarga no segura");
+                                continue;
+                            }
+                            break;
+                        }
+                    } catch (IOException e) {
+                        if (c != null) { c.disconnect(); c = null; }
+                        if (intento >= 3) throw e;
+                        code = -1;
                     }
-                    break;
+                    if (code == 200) break;
+                    if (c != null) { c.disconnect(); c = null; }
+                    boolean pasajero = code == -1 || code == 408 || code == 429 || code >= 500;
+                    if (!pasajero || intento >= 3) {
+                        if (code >= 500) throw new IOException("GitHub no responde ahora mismo (HTTP " + code + "). Prueba de nuevo en unos minutos.");
+                        throw new IOException("HTTP " + code);
+                    }
+                    Thread.sleep(2000L * (intento + 1) * (intento + 1));   // 2 s, 8 s y 18 s
                 }
-                if (code != 200) throw new IOException("HTTP " + code);
 
                 long total = c.getContentLengthLong();
                 long done = 0;

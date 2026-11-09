@@ -2041,7 +2041,8 @@ window.I18N["en"] = Object.assign(window.I18N["en"] || {}, {
 "🃏 UNO — el juego de cartas de colores, contra la máquina o en línea con amigos, y con modo aprendizaje. Gratis y sin anuncios.": "🃏 UNO — the colourful card game, against the computer or online with friends, with a learning mode. Free, no ads.",
 "👾 Invasores espaciales — el arcade retro de siempre, con reto en línea para jugar con tus amigos. Gratis y sin anuncios.": "👾 Space Invaders — the classic retro arcade, with an online challenge to play with your friends. Free, no ads.",
 "📖 Reglas del juego": "📖 Game rules",
-"récord": "record"
+"récord": "record",
+"GitHub no responde ahora mismo (HTTP {1}). Prueba de nuevo en unos minutos.": "GitHub isn't responding right now (HTTP {1}). Try again in a few minutes."
 });
 window.I18N["en:damas"] = Object.assign(window.I18N["en:damas"] || {}, {
 "Dama": "King",

@@ -15,7 +15,7 @@ jobs:
         with: { node-version: 22 }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
-      - run: npm ci || npm install
+      - run: SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm ci --ignore-scripts || npm install --ignore-scripts   # sharp (solo para generar iconos en local) no hace falta aquí
       - name: Servidor de juegos para las pruebas en línea (copia local, no toca el real)
         run: |
           git clone --depth 1 https://github.com/csuarezsm/juegos-servidor "$RUNNER_TEMP/juegos-servidor"
@@ -40,7 +40,7 @@ jobs:
       - name: Compilar APK (GitHub) y AAB (Google Play)
         working-directory: android
         env: { ANDROID_KEYSTORE_PASSWORD: "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" }
-        run: chmod +x gradlew && ./gradlew assembleGithubRelease bundlePlayRelease
+        run: chmod +x gradlew && for i in 1 2 3; do ./gradlew assembleGithubRelease bundlePlayRelease && break; [ $i = 3 ] && exit 1; echo "Reintento $i"; sleep 20; done
       - run: |
           cp android/app/build/outputs/apk/github/release/app-github-release.apk pumba.apk
           cp android/app/build/outputs/bundle/playRelease/app-play-release.aab pumba-play.aab

@@ -2794,7 +2794,14 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Junto con un alga, Dunaliella salina, tiñe de rosa algunos estanques de Janubio.": "Avec une algue, Dunaliella salina, elle colore en rose certains bassins de Janubio.",
 "Lagarto atlántico": "Lézard atlantique",
 "Tabaiba dulce": "Tabaiba douce",
-"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Un fond sonore doux pendant que tu joues, différent dans chaque monde"
+"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Un fond sonore doux pendant que tu joues, différent dans chaque monde",
+"Camello canario": "Chameau canarien",
+"Raza canaria reconocida": "Race canarienne reconnue",
+"Tiene una sola joroba, como los dromedarios, pero en Canarias siempre se le ha llamado camello. Y con razón: el camello canario es una raza propia, reconocida en el Catálogo Oficial de Razas de Ganado de España.": "Il n'a qu'une bosse, comme les dromadaires, mais aux Canaries on l'a toujours appelé chameau. Et à juste titre : le chameau canarien est une race à part, reconnue dans le Catalogue officiel des races d'élevage d'Espagne.",
+"Es una raza autóctona en peligro de extinción. Llegó a las islas para el trabajo del campo y hoy, desde Uga, pasea a los visitantes por Timanfaya. Martín es uno de ellos.": "C'est une race autochtone menacée d'extinction. Il est arrivé dans les îles pour les travaux des champs et aujourd'hui, depuis Uga, il promène les visiteurs à Timanfaya. Martín en fait partie.",
+"Ministerio de Agricultura: raza Camello Canario": "Ministère espagnol de l'Agriculture : race Chameau canarien",
+"Hoy en Uga viven unos 400 camellos. Cada mañana salen en fila india hacia el Echadero de los Camellos de Timanfaya, a hora y media de camino, donde pasean a los visitantes desde los años cincuenta.": "Aujourd'hui, environ 400 chameaux vivent à Uga. Chaque matin, ils partent en file indienne vers l'Echadero de los Camellos de Timanfaya, à une heure et demie de marche, où ils promènent les visiteurs depuis les années cinquante.",
+"De los paseos en camello por Timanfaya viven unas cuarenta familias de Uga. El camello llegó a la isla para el trabajo del campo.": "Une quarantaine de familles d'Uga vivent des promenades à dos de chameau à Timanfaya. Le chameau est arrivé sur l'île pour les travaux des champs."
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

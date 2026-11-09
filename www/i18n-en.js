@@ -2806,7 +2806,14 @@ window.I18N["en:martin"] = Object.assign(window.I18N["en:martin"] || {}, {
 "Junto con un alga, Dunaliella salina, tiñe de rosa algunos estanques de Janubio.": "Together with an alga, Dunaliella salina, it turns some of the Janubio pools pink.",
 "Lagarto atlántico": "Atlantic lizard",
 "Tabaiba dulce": "Sweet tabaiba",
-"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Soft background sound while you play, different in each world"
+"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Soft background sound while you play, different in each world",
+"Camello canario": "Canary camel",
+"Raza canaria reconocida": "Recognised Canary breed",
+"Tiene una sola joroba, como los dromedarios, pero en Canarias siempre se le ha llamado camello. Y con razón: el camello canario es una raza propia, reconocida en el Catálogo Oficial de Razas de Ganado de España.": "It has a single hump, like dromedaries, but in the Canary Islands it has always been called a camel. And rightly so: the Canary camel is a breed of its own, recognised in Spain's Official Catalogue of Livestock Breeds.",
+"Es una raza autóctona en peligro de extinción. Llegó a las islas para el trabajo del campo y hoy, desde Uga, pasea a los visitantes por Timanfaya. Martín es uno de ellos.": "It is a native breed in danger of extinction. It came to the islands to work in the fields and today, from Uga, it gives visitors rides in Timanfaya. Martín is one of them.",
+"Ministerio de Agricultura: raza Camello Canario": "Spanish Ministry of Agriculture: Canary camel breed",
+"Hoy en Uga viven unos 400 camellos. Cada mañana salen en fila india hacia el Echadero de los Camellos de Timanfaya, a hora y media de camino, donde pasean a los visitantes desde los años cincuenta.": "Today about 400 camels live in Uga. Every morning they set off in single file to the Echadero de los Camellos in Timanfaya, an hour and a half's walk away, where they have been giving visitors rides since the 1950s.",
+"De los paseos en camello por Timanfaya viven unas cuarenta familias de Uga. El camello llegó a la isla para el trabajo del campo.": "Some forty families in Uga make their living from the camel rides in Timanfaya. Camels were first brought to the island to work in the fields."
 });
 window.I18N["en:poker"] = Object.assign(window.I18N["en:poker"] || {}, {
 "Carta alta": "High card",

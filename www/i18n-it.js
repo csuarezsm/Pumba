@@ -2805,7 +2805,14 @@ window.I18N["it:martin"] = Object.assign(window.I18N["it:martin"] || {}, {
 "Junto con un alga, Dunaliella salina, tiñe de rosa algunos estanques de Janubio.": "Insieme a un'alga, Dunaliella salina, tinge di rosa alcune vasche di Janubio.",
 "Lagarto atlántico": "Lucertola atlantica",
 "Tabaiba dulce": "Tabaiba dolce",
-"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Un sottofondo leggero mentre giochi, diverso in ogni mondo"
+"Sonido de fondo suave mientras juegas, distinto en cada mundo": "Un sottofondo leggero mentre giochi, diverso in ogni mondo",
+"Camello canario": "Cammello canario",
+"Raza canaria reconocida": "Razza canaria riconosciuta",
+"Tiene una sola joroba, como los dromedarios, pero en Canarias siempre se le ha llamado camello. Y con razón: el camello canario es una raza propia, reconocida en el Catálogo Oficial de Razas de Ganado de España.": "Ha una sola gobba, come i dromedari, ma alle Canarie lo si è sempre chiamato cammello. E a ragione: il cammello canario è una razza a sé, riconosciuta nel Catalogo ufficiale delle razze di bestiame della Spagna.",
+"Es una raza autóctona en peligro de extinción. Llegó a las islas para el trabajo del campo y hoy, desde Uga, pasea a los visitantes por Timanfaya. Martín es uno de ellos.": "È una razza autoctona in pericolo di estinzione. Arrivò sulle isole per il lavoro nei campi e oggi, da Uga, porta a spasso i visitatori a Timanfaya. Martín è uno di loro.",
+"Ministerio de Agricultura: raza Camello Canario": "Ministero dell'Agricoltura spagnolo: razza Cammello canario",
+"Hoy en Uga viven unos 400 camellos. Cada mañana salen en fila india hacia el Echadero de los Camellos de Timanfaya, a hora y media de camino, donde pasean a los visitantes desde los años cincuenta.": "Oggi a Uga vivono circa 400 cammelli. Ogni mattina partono in fila indiana verso l'Echadero de los Camellos di Timanfaya, a un'ora e mezza di cammino, dove portano a spasso i visitatori dagli anni Cinquanta.",
+"De los paseos en camello por Timanfaya viven unas cuarenta familias de Uga. El camello llegó a la isla para el trabajo del campo.": "Una quarantina di famiglie di Uga vive delle passeggiate in cammello a Timanfaya. Il cammello arrivò sull'isola per il lavoro nei campi."
 });
 window.I18N["it:poker"] = Object.assign(window.I18N["it:poker"] || {}, {
 "Carta alta": "Carta alta",

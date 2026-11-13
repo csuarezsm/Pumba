@@ -2905,7 +2905,19 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "El paisaje del Charco de los Clicos ha servido de decorado para 14 películas.": "Le paysage du Charco de los Clicos a servi de décor à 14 films.",
 "En Lanzarote se han visto más de 190 especies de aves migratorias, y las salinas de Janubio son una de las zonas de mayor interés de Canarias para observar aves de orilla.": "Plus de 190 espèces d'oiseaux migrateurs ont été observées à Lanzarote, et les salines de Janubio sont l'un des sites les plus intéressants des Canaries pour observer les oiseaux de rivage.",
 "Al entrar, recibe al visitante una escultura de hierro de Manrique con un pez y un ave: el agua y el aire que rodean el mirador.": "À l'entrée, une sculpture en fer de Manrique représentant un poisson et un oiseau accueille le visiteur : l'eau et l'air qui entourent le belvédère.",
-"Casi toda la isla, menos los pueblos de Caleta de Sebo y Pedro Barba, pertenece al Patrimonio Nacional.": "Presque toute l'île, sauf les villages de Caleta de Sebo et Pedro Barba, appartient au Patrimoine national espagnol."
+"Casi toda la isla, menos los pueblos de Caleta de Sebo y Pedro Barba, pertenece al Patrimonio Nacional.": "Presque toute l'île, sauf les villages de Caleta de Sebo et Pedro Barba, appartient au Patrimoine national espagnol.",
+"◀ ▶ moverse": "◀ ▶ se déplacer",
+"⬆ saltar": "⬆ sauter",
+"Volver al mapa": "Retour à la carte",
+"Salir al mapa": "Quitter vers la carte",
+"⏸ Pausa": "⏸ Pause",
+"Pausa": "Pause",
+"Juego": "Jeu",
+"Izquierda": "Gauche",
+"Derecha": "Droite",
+"SALTAR": "SAUTER",
+"Saltar": "Sauter",
+"Omitir": "Passer"
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

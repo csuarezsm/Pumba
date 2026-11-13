@@ -3116,7 +3116,10 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Ministerio para la Transición Ecológica: la costa de Órzola (Haría)": "Ministère de la Transition écologique : la côte d'Órzola (Haría)",
 "Turismo de Teguise: la isla de La Graciosa": "Tourisme de Teguise : l'île de La Graciosa",
 "Martín es un camello de Uga, en Lanzarote, y existe de verdad. Ayúdale a llevar el agua por los caminos que dejó la tormenta. Gratis, sin anuncios y sin cuentas.": "Martín est un chameau d'Uga, à Lanzarote, et il existe vraiment. Aide-le à porter l'eau sur les chemins laissés par la tempête. Gratuit, sans publicité et sans compte.",
-"Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Maintiens ◀ ▶ pour marcher et touche ⬆ pour sauter. Prends soin de l'eau de la cruche : les chutes et les chocs la renversent. Tu découvriras le reste en chemin."
+"Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Maintiens ◀ ▶ pour marcher et touche ⬆ pour sauter. Prends soin de l'eau de la cruche : les chutes et les chocs la renversent. Tu découvriras le reste en chemin.",
+"Ríos de fuego": "Rivières de feu",
+"La lava no se salta: súbete a las costras de roca que flotan y deja que te lleven.": "On ne saute pas la lave : monte sur les croûtes de roche qui flottent et laisse-les te porter.",
+"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "On ne saute pas la lave : attends la croûte de roche sur la rive, monte dessus et laisse-la te porter."
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

@@ -3128,7 +3128,10 @@ window.I18N["en:martin"] = Object.assign(window.I18N["en:martin"] || {}, {
 "Ministerio para la Transición Ecológica: la costa de Órzola (Haría)": "Ministry for the Ecological Transition: the coast of Órzola (Haría)",
 "Turismo de Teguise: la isla de La Graciosa": "Teguise Tourism: the island of La Graciosa",
 "Martín es un camello de Uga, en Lanzarote, y existe de verdad. Ayúdale a llevar el agua por los caminos que dejó la tormenta. Gratis, sin anuncios y sin cuentas.": "Martín is a camel from Uga, in Lanzarote, and he really exists. Help him carry the water along the paths the storm left behind. Free, no ads and no accounts.",
-"Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Hold ◀ ▶ to walk and tap ⬆ to jump. Look after the water in the jug: falls and bumps spill it. You'll discover the rest along the way."
+"Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Hold ◀ ▶ to walk and tap ⬆ to jump. Look after the water in the jug: falls and bumps spill it. You'll discover the rest along the way.",
+"Ríos de fuego": "Rivers of fire",
+"La lava no se salta: súbete a las costras de roca que flotan y deja que te lleven.": "You can't jump the lava: climb onto the floating rock crusts and let them carry you.",
+"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "You can't jump the lava: wait on the bank for the rock crust, climb on and let it carry you."
 });
 window.I18N["en:poker"] = Object.assign(window.I18N["en:poker"] || {}, {
 "Carta alta": "High card",

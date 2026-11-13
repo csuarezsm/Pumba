@@ -3098,7 +3098,23 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Termina un reto diario.": "Termine un défi quotidien.",
 "Constancia": "Persévérance",
 "🔁 Constancia": "🔁 Persévérance",
-"Juega 50 partidas.": "Joue 50 parties."
+"Juega 50 partidas.": "Joue 50 parties.",
+"El Jable": "El Jable",
+"Un río de arena": "Une rivière de sable",
+"El Jable es un manto de arenas de origen marino. Entre el Risco de Famara y los pueblos de Soo y Muñique tiene unos cuatro kilómetros de ancho.": "El Jable est un manteau de sable d'origine marine. Entre le Risco de Famara et les villages de Soo et Muñique, il mesure environ quatre kilomètres de large.",
+"Los vientos alisios empujan la arena. Como guarda la humedad de la poca lluvia que cae, en ella se cultivan batatas, melones, sandías, calabazas y cebollas.": "Les alizés poussent le sable. Comme il garde l'humidité du peu de pluie qui tombe, on y cultive des patates douces, des melons, des pastèques, des citrouilles et des oignons.",
+"Es el hogar de aves como el bisbita caminero, el alcaraván y la hubara canaria.": "C'est le foyer d'oiseaux comme le pipit de Berthelot, l'œdicnème criard et l'outarde houbara des Canaries.",
+"Parte de El Jable está dentro de la Zona de Especial Protección para las Aves «Islotes del norte de Lanzarote y Famara», declarada en 1987.": "Une partie d'El Jable se trouve dans la Zone de protection spéciale pour les oiseaux « Îlots du nord de Lanzarote et Famara », déclarée en 1987.",
+"La batata de Lanzarote solo se cultiva de una manera tradicional: en la arena del jable.": "La patate douce de Lanzarote ne se cultive que d'une seule manière traditionnelle : dans le sable du jable.",
+"Órzola": "Órzola",
+"El muelle del norte": "Le quai du nord",
+"Órzola es un pueblo marinero del municipio de Haría, en la punta norte de Lanzarote.": "Órzola est un village de marins de la commune de Haría, à la pointe nord de Lanzarote.",
+"De su muelle salen los barcos hacia La Graciosa: a esa isla solo se llega por mar, desde Órzola.": "Les bateaux pour La Graciosa partent de son quai : on n'atteint cette île que par la mer, depuis Órzola.",
+"Hay dos líneas regulares de barcos, y durante la travesía se ve el Risco de Famara.": "Il y a deux lignes régulières de bateaux, et pendant la traversée on voit le Risco de Famara.",
+"Según un estudio del Ministerio para la Transición Ecológica sobre esta costa, Órzola es una localidad marinera de unos 275 habitantes.": "Selon une étude du ministère espagnol de la Transition écologique sur cette côte, Órzola est un village de marins d'environ 275 habitants.",
+"Defensor del Pueblo: la ZEPA de Famara y la hubara": "Défenseur du peuple : la ZPS de Famara et l'outarde houbara",
+"Ministerio para la Transición Ecológica: la costa de Órzola (Haría)": "Ministère de la Transition écologique : la côte d'Órzola (Haría)",
+"Turismo de Teguise: la isla de La Graciosa": "Tourisme de Teguise : l'île de La Graciosa"
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

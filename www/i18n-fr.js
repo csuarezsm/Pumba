@@ -3030,7 +3030,15 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Los primeros paseos a lomo de camello fueron en los años cincuenta.": "Les premières promenades à dos de chameau ont eu lieu dans les années cinquante.",
 "De los paseos en camello por Timanfaya viven cuarenta familias del pueblo de Uga. El Ayuntamiento de Yaiza promueve que se declaren patrimonio de interés social y cultural.": "Quarante familles du village d'Uga vivent des promenades à dos de chameau à Timanfaya. La mairie de Yaiza demande qu'elles soient déclarées patrimoine d'intérêt social et culturel.",
 "Por fin, el Echadero. Los camellos de la manada descansan con sus sillas vacías, esperando el trabajo del día. Martín los mira desde abajo: algún día él también será uno de ellos.": "Enfin, l'Echadero. Les chameaux du troupeau se reposent avec leurs selles vides, en attendant le travail de la journée. Martín les regarde d'en bas : un jour, lui aussi sera l'un d'eux.",
-"La historia de Martín · El Echadero": "L'histoire de Martín · El Echadero"
+"La historia de Martín · El Echadero": "L'histoire de Martín · El Echadero",
+"El mercado del pueblo": "Le marché du village",
+"El Mercado Municipal de Uga está junto a la iglesia del pueblo y abre los sábados y los domingos.": "Le marché municipal d'Uga se trouve à côté de l'église du village et ouvre le samedi et le dimanche.",
+"Vende productos de kilómetro cero: frutas, verduras, quesos, carnes, pan, dulces, mermeladas, infusiones y artesanía.": "On y vend des produits locaux : fruits, légumes, fromages, viandes, pain, douceurs, confitures, infusions et artisanat.",
+"El Ayuntamiento de Yaiza invirtió 70.000 euros en mejorar el edificio y comprar maquinaria, y el mercado volvió a abrir en octubre de 2022.": "La mairie de Yaiza a investi 70 000 euros pour améliorer le bâtiment et acheter du matériel, et le marché a rouvert en octobre 2022.",
+"Ayuntamiento de Yaiza: Mercado Municipal de Uga": "Mairie de Yaiza : marché municipal d'Uga",
+"Ayuntamiento de Yaiza: el Mercado de Uga se viste de fiesta": "Mairie de Yaiza : le marché d'Uga en fête",
+"Ayuntamiento de Yaiza: degustación en el Mercado de Uga": "Mairie de Yaiza : dégustation au marché d'Uga",
+"Nivel de premio · {1}": "Niveau bonus · {1}"
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

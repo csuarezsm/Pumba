@@ -3114,7 +3114,9 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Según un estudio del Ministerio para la Transición Ecológica sobre esta costa, Órzola es una localidad marinera de unos 275 habitantes.": "Selon une étude du ministère espagnol de la Transition écologique sur cette côte, Órzola est un village de marins d'environ 275 habitants.",
 "Defensor del Pueblo: la ZEPA de Famara y la hubara": "Défenseur du peuple : la ZPS de Famara et l'outarde houbara",
 "Ministerio para la Transición Ecológica: la costa de Órzola (Haría)": "Ministère de la Transition écologique : la côte d'Órzola (Haría)",
-"Turismo de Teguise: la isla de La Graciosa": "Tourisme de Teguise : l'île de La Graciosa"
+"Turismo de Teguise: la isla de La Graciosa": "Tourisme de Teguise : l'île de La Graciosa",
+"Martín es un camello de Uga, en Lanzarote, y existe de verdad. Ayúdale a llevar el agua por los caminos que dejó la tormenta. Gratis, sin anuncios y sin cuentas.": "Martín est un chameau d'Uga, à Lanzarote, et il existe vraiment. Aide-le à porter l'eau sur les chemins laissés par la tempête. Gratuit, sans publicité et sans compte.",
+"Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Maintiens ◀ ▶ pour marcher et touche ⬆ pour sauter. Prends soin de l'eau de la cruche : les chutes et les chocs la renversent. Tu découvriras le reste en chemin."
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

@@ -3028,7 +3028,9 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "Los paseos en camello": "Les promenades à dos de chameau",
 "En Timanfaya, los camellos de Uga pasean a los visitantes: es la actividad turística del sector camellar.": "À Timanfaya, les chameaux d'Uga promènent les visiteurs : c'est l'activité touristique du secteur chamelier.",
 "Los primeros paseos a lomo de camello fueron en los años cincuenta.": "Les premières promenades à dos de chameau ont eu lieu dans les années cinquante.",
-"De los paseos en camello por Timanfaya viven cuarenta familias del pueblo de Uga. El Ayuntamiento de Yaiza promueve que se declaren patrimonio de interés social y cultural.": "Quarante familles du village d'Uga vivent des promenades à dos de chameau à Timanfaya. La mairie de Yaiza demande qu'elles soient déclarées patrimoine d'intérêt social et culturel."
+"De los paseos en camello por Timanfaya viven cuarenta familias del pueblo de Uga. El Ayuntamiento de Yaiza promueve que se declaren patrimonio de interés social y cultural.": "Quarante familles du village d'Uga vivent des promenades à dos de chameau à Timanfaya. La mairie de Yaiza demande qu'elles soient déclarées patrimoine d'intérêt social et culturel.",
+"Por fin, el Echadero. Los camellos de la manada descansan con sus sillas vacías, esperando el trabajo del día. Martín los mira desde abajo: algún día él también será uno de ellos.": "Enfin, l'Echadero. Les chameaux du troupeau se reposent avec leurs selles vides, en attendant le travail de la journée. Martín les regarde d'en bas : un jour, lui aussi sera l'un d'eux.",
+"La historia de Martín · El Echadero": "L'histoire de Martín · El Echadero"
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

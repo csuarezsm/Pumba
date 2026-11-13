@@ -3049,7 +3049,13 @@ window.I18N["it:martin"] = Object.assign(window.I18N["it:martin"] || {}, {
 "Ayuntamiento de Yaiza: Mercado Municipal de Uga": "Comune di Yaiza: Mercato Municipale di Uga",
 "Ayuntamiento de Yaiza: el Mercado de Uga se viste de fiesta": "Comune di Yaiza: il Mercato di Uga in festa",
 "Ayuntamiento de Yaiza: degustación en el Mercado de Uga": "Comune di Yaiza: degustazione al Mercato di Uga",
-"Nivel de premio · {1}": "Livello premio · {1}"
+"Nivel de premio · {1}": "Livello premio · {1}",
+"El jable de Famara": "Le dune di Famara (El Jable)",
+"Las barcas de Órzola": "Le barche di Órzola",
+"Dunas de arena: cuesta arriba se va despacio y cuesta abajo se coge carrerilla.": "Dune di sabbia: in salita si va piano e in discesa si prende la rincorsa.",
+"El agua no se salta: sube a la barca cuando llegue al muelle y deja que te lleve.": "L'acqua non si salta: sali sulla barca quando arriva al molo e lasciati portare.",
+"Dunas de arena: cuesta arriba se va despacio y cuesta abajo se coge carrerilla. Si te paras en la cuesta, la arena te baja.": "Dune di sabbia: in salita si va piano e in discesa si prende la rincorsa. Se ti fermi sul pendio, la sabbia ti fa scivolare giù.",
+"El agua no se salta: espera en el muelle a que llegue la barca, súbete y deja que te lleve.": "L'acqua non si salta: aspetta la barca sul molo, sali a bordo e lasciati portare."
 });
 window.I18N["it:poker"] = Object.assign(window.I18N["it:poker"] || {}, {
 "Carta alta": "Carta alta",

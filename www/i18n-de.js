@@ -3131,7 +3131,9 @@ window.I18N["de:martin"] = Object.assign(window.I18N["de:martin"] || {}, {
 "Ríos de fuego": "Feuerflüsse",
 "La lava no se salta: súbete a las costras de roca que flotan y deja que te lleven.": "Über die Lava springt man nicht: Steig auf die schwimmenden Gesteinskrusten und lass dich tragen.",
 "La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "Über die Lava springt man nicht: Warte am Ufer auf die Gesteinskruste, steig auf und lass dich tragen.",
-"¡Martín ha caído en la lava!": "Martín ist in die Lava gefallen!"
+"¡Martín ha caído en la lava!": "Martín ist in die Lava gefallen!",
+"📳 Vibración": "📳 Vibration",
+"Un toque suave al recibir un golpe, caer o coger fruta": "Ein sanftes Vibrieren, wenn du getroffen wirst, fällst oder Obst aufsammelst"
 });
 window.I18N["de:poker"] = Object.assign(window.I18N["de:poker"] || {}, {
 "Carta alta": "Höchste Karte",

@@ -3122,7 +3122,8 @@ window.I18N["fr:martin"] = Object.assign(window.I18N["fr:martin"] || {}, {
 "La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "On ne saute pas la lave : attends la croûte de roche sur la rive, monte dessus et laisse-la te porter.",
 "¡Martín ha caído en la lava!": "Martín est tombé dans la lave !",
 "📳 Vibración": "📳 Vibration",
-"Un toque suave al recibir un golpe, caer o coger fruta": "Une légère vibration quand tu prends un coup, tombes ou ramasses un fruit"
+"Un toque suave al recibir un golpe, caer o coger fruta": "Une légère vibration quand tu prends un coup, tombes ou ramasses un fruit",
+"👍 ¡Así se salta!": "👍 C'est comme ça qu'on saute !"
 });
 window.I18N["fr:poker"] = Object.assign(window.I18N["fr:poker"] || {}, {
 "Carta alta": "Carte haute",

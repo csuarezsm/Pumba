@@ -3134,7 +3134,8 @@ window.I18N["en:martin"] = Object.assign(window.I18N["en:martin"] || {}, {
 "La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "You can't jump the lava: wait on the bank for the rock crust, climb on and let it carry you.",
 "¡Martín ha caído en la lava!": "Martín has fallen into the lava!",
 "📳 Vibración": "📳 Vibration",
-"Un toque suave al recibir un golpe, caer o coger fruta": "A gentle buzz when you get hit, fall or pick up fruit"
+"Un toque suave al recibir un golpe, caer o coger fruta": "A gentle buzz when you get hit, fall or pick up fruit",
+"👍 ¡Así se salta!": "👍 That's how you jump!"
 });
 window.I18N["en:poker"] = Object.assign(window.I18N["en:poker"] || {}, {
 "Carta alta": "High card",

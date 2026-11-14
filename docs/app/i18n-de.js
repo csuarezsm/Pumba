@@ -3130,7 +3130,8 @@ window.I18N["de:martin"] = Object.assign(window.I18N["de:martin"] || {}, {
 "Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Halte ◀ ▶ zum Gehen und tippe ⬆ zum Springen. Pass auf das Wasser im Krug auf: Stürze und Stöße verschütten es. Den Rest entdeckst du unterwegs.",
 "Ríos de fuego": "Feuerflüsse",
 "La lava no se salta: súbete a las costras de roca que flotan y deja que te lleven.": "Über die Lava springt man nicht: Steig auf die schwimmenden Gesteinskrusten und lass dich tragen.",
-"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "Über die Lava springt man nicht: Warte am Ufer auf die Gesteinskruste, steig auf und lass dich tragen."
+"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "Über die Lava springt man nicht: Warte am Ufer auf die Gesteinskruste, steig auf und lass dich tragen.",
+"¡Martín ha caído en la lava!": "Martín ist in die Lava gefallen!"
 });
 window.I18N["de:poker"] = Object.assign(window.I18N["de:poker"] || {}, {
 "Carta alta": "Höchste Karte",

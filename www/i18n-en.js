@@ -3131,7 +3131,8 @@ window.I18N["en:martin"] = Object.assign(window.I18N["en:martin"] || {}, {
 "Mantén ◀ ▶ para caminar y toca ⬆ para saltar. Cuida el agua del cántaro: las caídas y los golpes la derraman. Lo demás lo irás descubriendo por el camino.": "Hold ◀ ▶ to walk and tap ⬆ to jump. Look after the water in the jug: falls and bumps spill it. You'll discover the rest along the way.",
 "Ríos de fuego": "Rivers of fire",
 "La lava no se salta: súbete a las costras de roca que flotan y deja que te lleven.": "You can't jump the lava: climb onto the floating rock crusts and let them carry you.",
-"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "You can't jump the lava: wait on the bank for the rock crust, climb on and let it carry you."
+"La lava no se salta: espera en la orilla a que llegue la costra de roca, súbete y deja que te lleve.": "You can't jump the lava: wait on the bank for the rock crust, climb on and let it carry you.",
+"¡Martín ha caído en la lava!": "Martín has fallen into the lava!"
 });
 window.I18N["en:poker"] = Object.assign(window.I18N["en:poker"] || {}, {
 "Carta alta": "High card",

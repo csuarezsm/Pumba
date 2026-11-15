@@ -39,7 +39,8 @@ function cargar(d) {
 if (lang !== 'es') { cargar(DIC); cargar(EXTRA); }
 // las plantillas más concretas primero («… Sale Tú.» antes que «… Sale {2}.»)
 const letras = re => String(re[0].source).replace(/\(\.\*\?\)/g, '').replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ]/g, '').length;
-PATRONES.sort((a, b) => letras(b) - letras(a));
+const fijo = re => String(re[0].source).replace(/\(\.\*\?\)/g, '').replace(/\\/g, '').length;   // a igualdad de letras, la de más texto fijo («Nivel {1} · {2}» antes que «{1} verde»)
+PATRONES.sort((a, b) => letras(b) - letras(a) || fijo(b) - fijo(a));
 const MEMO = new Map();
 // Traduce un texto (ya normalizado). Devuelve null si no sabe.
 function tr(s) {

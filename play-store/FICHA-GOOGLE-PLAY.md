@@ -95,6 +95,14 @@ Desarrollada en Lanzarote por IT Canarias.
 - Nombre de la versión: el mismo que la Release (por ejemplo, 1.0.2).
 - Notas: copia la primera línea del commit de la Release.
 
+## Subida automática a Google Play
+
+Con el secreto `PLAY_SERVICE_ACCOUNT_JSON` en el repo (clave JSON de una cuenta de servicio con permiso en Play Console):
+
+- **Versiones:** cada versión nueva que compila CI se sube sola al canal de la variable `PLAY_TRACK` (`internal` por defecto; `production` para publicarla directamente). Las notas de la versión son la primera línea del commit.
+- **Ficha:** al cambiar en esta carpeta el texto de la ficha, las imágenes o `video-url.txt` (enlace de YouTube del vídeo), el flujo «Ficha de Google Play» sube textos, icono, gráfico destacado, capturas y vídeo. También se puede lanzar a mano desde Actions.
+- El idioma de la ficha es `es-ES` (variable `PLAY_IDIOMA` si en Play Console es otro).
+
 ## Firma
 
 Play App Signing activado (opción por defecto). La clave de subida es `pumba-release.jks` (alias `pumba`), la misma que firma el APK de GitHub.

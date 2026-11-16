@@ -45,6 +45,7 @@ jobs:
           cp android/app/build/outputs/apk/github/release/app-github-release.apk pumba.apk
           cp android/app/build/outputs/bundle/playRelease/app-play-release.aab pumba-play.aab
       - name: Publicar versión
+        id: pub
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
           V=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
@@ -52,6 +53,22 @@ jobs:
           # Una versión ya publicada no se vuelve a crear: así se conserva su contador de descargas
           if gh release view "v$V" >/dev/null 2>&1; then echo "La v$V ya está publicada; sube versionName para publicar otra."; exit 0; fi
           gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          echo "nueva=1" >> "$GITHUB_OUTPUT"
           gh release create "v$V" pumba.apk pumba-play.aab --latest --title "Pumba v$V" --notes "$(git log -1 --pretty=%s)
 
           © 2026 IT Canarias. Todos los derechos reservados."
+      - name: Subir la versión a Google Play (solo si es nueva y está el secreto PLAY_SERVICE_ACCOUNT_JSON)
+        if: steps.pub.outputs.nueva == '1'
+        env:
+          PLAY_JSON: "${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}"
+          PLAY_TRACK: "${{ vars.PLAY_TRACK || 'internal' }}"   # internal (prueba interna) o production; se cambia en Settings → Variables
+        run: |
+          if [ -z "$PLAY_JSON" ]; then echo "Sin secreto PLAY_SERVICE_ACCOUNT_JSON: no se sube a Google Play (el .aab está en la Release)."; exit 0; fi
+          printf '%s' "$PLAY_JSON" > "$RUNNER_TEMP/play.json"
+          node tools/metadatos-play.mjs "$RUNNER_TEMP/play-metadata"
+          sudo gem install fastlane -N >/dev/null
+          fastlane supply --aab pumba-play.aab --track "$PLAY_TRACK" --release_status completed \
+            --package_name com.itcanarias.pumba --json_key "$RUNNER_TEMP/play.json" --metadata_path "$RUNNER_TEMP/play-metadata" \
+            --skip_upload_apk true --skip_upload_metadata true --skip_upload_images true --skip_upload_screenshots true
+          rm -f "$RUNNER_TEMP/play.json"
+          echo "Subida a Google Play, canal $PLAY_TRACK"

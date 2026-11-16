@@ -19,9 +19,5 @@ jobs:
           PLAY_IDIOMA: "${{ vars.PLAY_IDIOMA || 'es-ES' }}"
         run: |
           if [ -z "$PLAY_JSON" ]; then echo "::warning::Falta el secreto PLAY_SERVICE_ACCOUNT_JSON: no se sube nada."; exit 0; fi
-          printf '%s' "$PLAY_JSON" > "$RUNNER_TEMP/play.json"
           node tools/metadatos-play.mjs "$RUNNER_TEMP/play-metadata"
-          sudo gem install fastlane -N >/dev/null
-          fastlane supply --package_name com.itcanarias.pumba --json_key "$RUNNER_TEMP/play.json" --metadata_path "$RUNNER_TEMP/play-metadata" \
-            --skip_upload_apk true --skip_upload_aab true --skip_upload_changelogs true
-          rm -f "$RUNNER_TEMP/play.json"
+          node tools/subir-ficha-play.mjs com.itcanarias.pumba "$RUNNER_TEMP/play-metadata" "$PLAY_IDIOMA"
